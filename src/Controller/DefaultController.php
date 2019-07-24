@@ -23,4 +23,14 @@ class DefaultController extends AbstractController
     //        'entities' => $result
         ]);
     }
+
+    /**
+     * @Route("/stream", methods={"GET"}, name="default_stream")
+     */
+    public function streamAction(): Response
+    {
+        return $this->render('default/stream.html.twig', [
+    //        'entities' => $result
+        ]);
+    }
 }

@@ -1,0 +1,5 @@
+sylius_resource:
+    resources:
+        app.clip:
+            classes:
+                model: App\Entity\Clip

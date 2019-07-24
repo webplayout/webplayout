@@ -1,3 +1,8 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+
+app_clip:
+    resource: |
+        alias: app.clip
+    type: sylius.resource_api

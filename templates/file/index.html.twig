@@ -15,16 +15,16 @@
         </tr>
     </thead>
     <tbody>
-    {% for entity in entities %}
+    {% for resource in resources %}
         <tr>
-            <td><a href="{{ path('file_show', { 'id': entity.id }) }}">{{ entity.name }}</a></td>
-            <td>{{ entity.file }}</td>
-            <td>{{ entity.duration }}</td>
-            <td>{{ entity.id }}</td>
+            <td><a href="{{ path(configuration.getRouteName('show'), configuration.vars.route.parameters|default({ 'id': resource.id })) }}">{{ resource.name }}</a></td>
+            <td>{{ resource.file }}</td>
+            <td>{{ resource.duration }}</td>
+            <td>{{ resource.id }}</td>
             <td>
                 <ul>
                     <li>
-                        <a href="{{ path('file_show', { 'id': entity.id }) }}">show</a>
+                        <a href="{{ path(configuration.getRouteName('show'), configuration.vars.route.parameters|default({ 'id': resource.id })) }}">show</a>
                     </li>
                     <li>
                         <a href="{#{ path('file_edit', { 'id': entity.id }) }#}">edit</a>
@@ -49,4 +49,11 @@
     </li>
 </ul>
 #}
+{% endblock %}
+
+
+{% block stylesheets %}
+
+    {{ encore_entry_link_tags('clip') }}
+
 {% endblock %}

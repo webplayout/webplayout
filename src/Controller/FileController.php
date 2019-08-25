@@ -22,19 +22,19 @@ use App\Repository\FileRepository;
  */
 class FileController extends AbstractController
 {
-    /**
-     * Lists all Files entities.
-     *
-     * @Route("/files", defaults={"page": "1", "_format"="html"}, methods={"GET"}, name="file_index")
-     */
-    public function index(FileRepository $files): Response
-    {
-        $result = $files->findBy([], ['id' => 'DESC']);
-
-        return $this->render('file/index.html.twig', [
-            'entities' => $result
-        ]);
-    }
+    // /**
+    //  * Lists all Files entities.
+    //  *
+    //  * @Route("/files", defaults={"page": "1", "_format"="html"}, methods={"GET"}, name="file_index")
+    //  */
+    // public function index(FileRepository $files): Response
+    // {
+    //     $result = $files->findBy([], ['id' => 'DESC']);
+    //
+    //     return $this->render('file/index.html.twig', [
+    //         'entities' => $result
+    //     ]);
+    // }
 
     // public function indexAction(FileRepository)
     // {
@@ -62,22 +62,22 @@ class FileController extends AbstractController
      *
      * @Route("/files/{id}", methods={"GET"},requirements={"id": "\d+"}, name="file_show")
      */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('OmarevTvBundle:Files')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Files entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('OmarevTvBundle:Files:show.html.twig', array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),        ));
-    }
+    // public function showAction($id)
+    // {
+    //     $em = $this->getDoctrine()->getManager();
+    //
+    //     $entity = $em->getRepository('OmarevTvBundle:Files')->find($id);
+    //
+    //     if (!$entity) {
+    //         throw $this->createNotFoundException('Unable to find Files entity.');
+    //     }
+    //
+    //     $deleteForm = $this->createDeleteForm($id);
+    //
+    //     return $this->render('OmarevTvBundle:Files:show.html.twig', array(
+    //         'entity'      => $entity,
+    //         'delete_form' => $deleteForm->createView(),        ));
+    // }
 
     /**
      * Displays a form to create a new Files entity.
@@ -122,25 +122,25 @@ class FileController extends AbstractController
      * Displays a form to edit an existing Files entity.
      *
      */
-    public function editAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('OmarevTvBundle:Files')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Files entity.');
-        }
-
-        $editForm = $this->createForm(new FilesType(), $entity);
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('OmarevTvBundle:Files:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
+    // public function editAction($id)
+    // {
+    //     $em = $this->getDoctrine()->getManager();
+    //
+    //     $entity = $em->getRepository('OmarevTvBundle:Files')->find($id);
+    //
+    //     if (!$entity) {
+    //         throw $this->createNotFoundException('Unable to find Files entity.');
+    //     }
+    //
+    //     $editForm = $this->createForm(new FilesType(), $entity);
+    //     $deleteForm = $this->createDeleteForm($id);
+    //
+    //     return $this->render('OmarevTvBundle:Files:edit.html.twig', array(
+    //         'entity'      => $entity,
+    //         'edit_form'   => $editForm->createView(),
+    //         'delete_form' => $deleteForm->createView(),
+    //     ));
+    // }
 
     /**
      * Edits an existing Files entity.

@@ -5,8 +5,9 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
-    media_dir: /tmp
+    media_dir: /var/www/media
     ffmpeg_path: /usr/bin/ffmpeg
+    logo: ''
 
 services:
     # default configuration for services in *this* file
@@ -28,3 +29,30 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+
+    app.clip.form.type:
+        class: App\Form\Type\ClipType
+        tags:
+            - { name: form.type }
+        arguments: ['%app.model.clip.class%', {}]
+        #arguments: ['%app.model.clip.class%', '%app.clip.form.type.validation_groups%']
+
+    #app.block_event_listener.clip.layout.after_header:
+    #    class: Sylius\Bundle\UiBundle\Block\BlockEventListener
+    #    arguments:
+    #        - 'block.html.twig'
+    #    tags:
+    #        - { name: kernel.event_listener, event: sonata.block.event.sylius.shop.layout.after_header, method: onBlockEvent }
+
+    mlt.persister:
+        class: App\
+
+    app_clip.listener.mlt_write:
+        class: App\EventListener\ClipPersistListener
+        arguments:
+           - '%media_dir%'
+           - '%logo%'
+        tags:
+            - { name: kernel.event_listener, event: app.clip.post_create, method: writeMlt }
+            - { name: kernel.event_listener, event: app.clip.post_update, method: writeMlt }

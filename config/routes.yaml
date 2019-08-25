@@ -5,4 +5,14 @@
 app_clip:
     resource: |
         alias: app.clip
+    type: sylius.resource
+
+app_schedule:
+    resource: |
+        alias: app.schedule
+    type: sylius.resource_api
+
+app_file:
+    resource: |
+        alias: app.file
     type: sylius.resource_api

@@ -4,20 +4,15 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Sylius\Component\Resource\Model\ResourceInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
-/*
-<field name="name" type="string" column="name" length="255" nullable="false"/>
-<field name="file" type="string" column="file" length="255" nullable="false"/>
-<field name="duration" type="integer" column="duration" nullable="false"/>
-*/
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FileRepository")
  * @ORM\Table(name="files")
  */
-class File
+class File implements ResourceInterface
 {
     /**
      * @var string $name

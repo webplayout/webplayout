@@ -1,0 +1,66 @@
+{% block media_choice_row %}
+    {{ form_label(form) }}
+    {{ form_widget(form) }}
+    {{ form_help(form) }}
+    {{ form_errors(form) }}
+
+    <div class="row">
+        <div class="col-7">
+
+            <h4>Selected <span id="playlistDuration" class="badge badge-pill badge-primary">00:00:00</span></h4>
+
+            <ul id="playlist">
+
+                {% for file in form.parent.vars.data.files %}
+                {% set file = file.file %}
+                    <li data-id="{{ file.id }}" data-duration="{{ file.duration }}" class="ui-state-default">
+                        <span class="ui-icon ui-icon-document"></span>{{ file.name }}
+                        <a class="ui-icon ui-icon-minus"></a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-5">
+            <h3>Media</h3>
+
+            <div id="catalog" class="listBlock">
+
+                <ul>
+                    <li><a href="#tabs-1">Files</a></li>
+                    <li><a href="#tabs-2">Clips</a></li>
+                    <li><a href="#tabs-3">Other</a></li>
+                </ul>
+
+                <div id="tabs-1" class="list" style="overflow-y: scroll; height:150px;">
+                    <ul>
+                        {#% for file in files %}
+                            <li data-id="{{ file.id }}" data-duration="{{ file.duration }}" class="ui-state-default">
+                                <span class="ui-icon ui-icon-document" style="float: left"></span>{{ file.name }}
+                                <a class="ui-icon ui-icon-minus"></a>
+                            </li>
+                        {% endfor %#}
+                    </ul>
+                </div>
+                <div id="tabs-2">
+
+                </div>
+                <div id="tabs-3">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<style type="text/css">
+    #catalog .list ul,
+    #playlist { list-style-type: none; margin: 0; padding: 0; }
+
+    .list ul li a.ui-icon { float: right; }
+    .list ul li a:hover.ui-icon { cursor: pointer; }
+
+    #playlist {background-color: #eee; border: 2px dashed #aaa; border-radius: 10px; min-height: 440px; margin-bottom: 20px; }
+    #catalog .ui-tabs-panel {padding: 0; }
+</style>
+
+{% endblock %}

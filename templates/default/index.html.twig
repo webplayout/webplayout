@@ -1,5 +1,17 @@
-{% extends 'base.html.twig' %}
+{#{% extends 'base.html.twig' %}
 
 {% block body %}
 123
 {% endblock %}
+#}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    {{ encore_entry_link_tags('scheduler') }}
+  </head>
+  <body>
+    <div id='root'></div>
+    {{ encore_entry_script_tags('scheduler') }}
+  </body>
+</html>

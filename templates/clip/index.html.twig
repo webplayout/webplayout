@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {#% import '@SyliusUi/Macro/messages.html.twig' as messages %#}
+{% import '@SyliusResource/Macros/buttons.html.twig' as buttons %}
 
 {% block body %}
     <style>
@@ -14,9 +15,15 @@
     {% if resources|length > 0 %}
 
         {% for resource in resources %}
-            {{resource.id}}
+            {{resource.id}} /
+            {{resource.name}} /
+            <a href="{{ path(configuration.getRouteName('update'), configuration.vars.route.parameters|default({ 'id': resource.id })) }}">Edit</a> /
+            <a href="{{ path(configuration.getRouteName('delete'), configuration.vars.route.parameters|default({ 'id': resource.id })) }}">Delete</a>
+            {{ buttons.delete(
+                path(configuration.getRouteName('delete'), configuration.vars.route.parameters|default({ 'id': resource.id }))
+            )}}
             <br>
-            {{resource.name}}
+            
         {% endfor %}
 
     {% else %}
@@ -33,14 +40,6 @@
 <div class="ui clearing hidden divider"></div>
 
 
-
-
-{% endblock %}
-
-{% block javascripts %}
-
-    {{ encore_entry_script_tags('clip') }}
-
 {% endblock %}
 
 {% block stylesheets %}
@@ -48,4 +47,3 @@
     {{ encore_entry_link_tags('clip') }}
 
 {% endblock %}
-

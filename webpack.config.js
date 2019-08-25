@@ -25,10 +25,14 @@ Encore
      */
     .addEntry('app', './assets/js/app.js')
     .addEntry('upload', './assets/js/upload.js')
+    .addEntry('stream', './assets/js/stream.js')
     .addEntry('login', [
         './assets/js/login.js',
         './assets/css/login.sass'
     ])
+    .addEntry('scheduler', './assets/js/scheduler.js')
+    .addEntry('schedule', './assets/js/schedule.js')
+    .addEntry('clip', './assets/js/clip.js')
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 
@@ -53,7 +57,16 @@ Encore
     .enableVersioning(Encore.isProduction())
 
     // enables @babel/preset-env polyfills
-    .configureBabel(() => {}, {
+    .configureBabel((babelConfig) => {
+
+        // babelConfig.presets.push('@babel/preset-env');
+        // babelConfig.presets.push('@babel/preset-react');
+        //
+        // babelConfig.presets.push('module:@babel/plugin-syntax-dynamic-import');
+        // babelConfig.presets.push('module:@babel/plugin-proposal-class-properties');
+        // babelConfig.presets.push('module:@babel/plugin-proposal-export-namespace-from');
+        // babelConfig.presets.push('module:@babel/plugin-proposal-throw-expressions');
+    }, {
         useBuiltIns: 'usage',
         corejs: 3
     })
@@ -72,7 +85,7 @@ Encore
     //.autoProvidejQuery()
 
     // uncomment if you use API Platform Admin (composer req api-admin)
-    //.enableReactPreset()
+    .enableReactPreset()
     //.addEntry('admin', './assets/js/admin.js')
 ;
 

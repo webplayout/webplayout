@@ -2,17 +2,24 @@
 
 namespace App\Entity;
 
-
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity()
  * @ORM\Table(name="clips")
  */
 class Clip implements ResourceInterface
 {
+    /**
+    * @ORM\OneToMany(targetEntity="ClipFile", mappedBy="clip",
+    *      cascade={"persist", "remove"}, orphanRemoval=true)
+    * @ORM\OrderBy({"ord" = "ASC"})
+    */
+    private $files;
+
     /**
      * @var string $name
      *
@@ -22,14 +29,43 @@ class Clip implements ResourceInterface
     private $name;
 
     /**
-     * @var integer $id
-     *
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", options={"unsigned": true})
+     * @ORM\Column(name="id", type="guid")
+     * @ORM\GeneratedValue(strategy="UUID")
      */
     private $id;
 
+    public function __construct()
+    {
+        $this->files = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set files
+     *
+     * @param string $files
+     * @return Clip
+     */
+    public function setFiles($files)
+    {
+        foreach ($files as $file) {
+            $file->setClip($this);
+        }
+
+        $this->files = $files;
+
+        return $this;
+    }
+
+    /**
+     * Get files
+     *
+     * @return string
+     */
+    public function getFiles()
+    {
+        return $this->files;
+    }
 
     /**
      * Set name

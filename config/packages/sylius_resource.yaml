@@ -3,3 +3,18 @@ sylius_resource:
         app.clip:
             classes:
                 model: App\Entity\Clip
+                form: App\Form\Type\ClipType
+            templates: 'clip'
+
+        app.schedule:
+            classes:
+                model: App\Entity\Schedule
+
+        app.file:
+            classes:
+                model: App\Entity\File
+            templates: 'file'
+
+        app.clipFile:
+            classes:
+                model: App\Entity\ClipFile

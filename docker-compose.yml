@@ -3,6 +3,10 @@ services:
   nginx:
     build: ./docker/nginx
     image: webplayout/nginx
+    depends_on:
+      # - melted
+      # - mysql
+      - php_fpm
     ports:
       - "80:80"
       - "8583:8583"
@@ -16,18 +20,16 @@ services:
         ipv4_address: 172.27.0.106
 
   php_fpm:
-    build: ./docker/php-fpm
-    # depends_on:
-    #   - melted
-    #   - mysql
+    depends_on:
+      - mysql
+    build: .
     image: webplayout/admin
     ports:
       - "9000:9000"
-      #- "8583:8583"
     volumes:
       - .:/var/www
       - media:/var/www/media:Z
-      - hls_live:/var/www/hls_live:Z
+      #- hls_live:/var/www/hls_live:Z
     restart: always
     networks:
       webplayout:
@@ -43,10 +45,6 @@ services:
       - "/dev/dri/card0:/dev/dri/card0"
       - "/dev/dri/renderD128:/dev/dri/renderD128"
     build: ./docker/melted
-    # depends_on:
-    #   - rtmp
-    #   #- rtsp
-    #   - vlc
     image: webplayout/melted
     # environment:
     #   - MLT_PROFILE=atsc_720p_25
@@ -73,7 +71,7 @@ services:
     expose:
       - "3306"
     volumes:
-      - db-data:/var/lib/mysql
+      - db_data:/var/lib/mysql
       - ./tv.sql:/docker-entrypoint-initdb.d/tv.sql
     restart: always
     networks:
@@ -89,5 +87,8 @@ networks:
 
 volumes:
   hls_live:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
   media:
-  db-data:
+  db_data:

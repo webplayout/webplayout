@@ -8,9 +8,12 @@ WORKDIR /var/www
 
 #COPY . /var/www
 
-RUN rm -rf /var/www/html
+#RUN rm -rf /var/www/html
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
+
+# build for production
+#ARG APP_ENV=prod
 
 # Add and Enable PHP-PDO Extenstions
 RUN docker-php-ext-install pdo_mysql bcmath
@@ -22,10 +25,13 @@ RUN docker-php-ext-install pdo_mysql bcmath
 #     php7-soap \
 #     php7-zip \
 
+# RUN bin/console doctrine:schema:drop --force
+# RUN bin/console doctrine:schema:update --force
+# RUN bin/console doctrine:fixtures:load
 
-#RUN apk add shadow && usermod -u 1000 www-data && groupmod -g 1000 www-data
+RUN mkdir /var/www/media && chown www-data:www-data /var/www/media
 
-VOLUME /var/www/media
+VOLUME ["/var/www/media"]
 
 EXPOSE 9000
 

@@ -22,6 +22,11 @@ RUN docker-php-ext-install pdo_mysql bcmath
 #     php7-soap \
 #     php7-zip \
 
+
+#RUN apk add shadow && usermod -u 1000 www-data && groupmod -g 1000 www-data
+
+VOLUME /var/www/media
+
 EXPOSE 9000
 
 CMD ["php-fpm", "-F"]

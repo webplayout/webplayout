@@ -65,9 +65,11 @@ class User implements UserInterface, \Serializable
         return $this->id;
     }
 
-    public function setFullName(string $fullName): void
+    public function setFullName(string $fullName)
     {
         $this->fullName = $fullName;
+
+        return $this;
     }
 
     public function getFullName(): ?string
@@ -80,9 +82,11 @@ class User implements UserInterface, \Serializable
         return $this->username;
     }
 
-    public function setUsername(string $username): void
+    public function setUsername(string $username)
     {
         $this->username = $username;
+
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -90,9 +94,11 @@ class User implements UserInterface, \Serializable
         return $this->email;
     }
 
-    public function setEmail(string $email): void
+    public function setEmail(string $email)
     {
         $this->email = $email;
+
+        return $this;
     }
 
     public function getPassword(): ?string
@@ -100,9 +106,11 @@ class User implements UserInterface, \Serializable
         return $this->password;
     }
 
-    public function setPassword(string $password): void
+    public function setPassword(string $password)
     {
         $this->password = $password;
+
+        return $this;
     }
 
     /**
@@ -120,9 +128,11 @@ class User implements UserInterface, \Serializable
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): void
+    public function setRoles(array $roles)
     {
         $this->roles = $roles;
+
+        return $this;
     }
 
     /**

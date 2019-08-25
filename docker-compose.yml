@@ -1,13 +1,13 @@
 version: '3'
 services:
   nginx:
-    build: ./symfony/docker/nginx
+    build: ./docker/nginx
     image: webplayout/nginx
     ports:
       - "80:80"
       - "8583:8583"
     volumes:
-      - ./symfony:/var/www
+      - .:/var/www
       - media:/var/www/media:Z
       - hls_live:/var/www/hls_live:Z
     restart: always
@@ -15,8 +15,8 @@ services:
       webplayout:
         ipv4_address: 172.27.0.106
 
-  php-fpm:
-    build: ./
+  php_fpm:
+    build: ./docker/php-fpm
     # depends_on:
     #   - melted
     #   - mysql
@@ -25,7 +25,7 @@ services:
       - "9000:9000"
       #- "8583:8583"
     volumes:
-      - ./symfony:/var/www
+      - .:/var/www
       - media:/var/www/media:Z
       - hls_live:/var/www/hls_live:Z
     restart: always
@@ -42,7 +42,7 @@ services:
     devices:
       - "/dev/dri/card0:/dev/dri/card0"
       - "/dev/dri/renderD128:/dev/dri/renderD128"
-    build: ./melted
+    build: ./docker/melted
     # depends_on:
     #   - rtmp
     #   #- rtsp

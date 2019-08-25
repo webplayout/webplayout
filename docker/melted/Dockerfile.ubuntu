@@ -1,0 +1,53 @@
+FROM ubuntu:trusty
+MAINTAINER Nikita Omarev <nikita@omarev.com>
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV HOME /tmp
+
+# Installing libs for melted
+RUN apt-get update && apt-get install -y libmp3lame0 libgavl1 libsamplerate0 \
+  libsoxr-lsr0 libxml2 libjack0 libsox2 libsdl1.2debian libgtk2.0-0 liboil0.3 \
+  libsoup2.4-1 libqt4-opengl libqt4-svg libqtgui4 libexif12 libtheora0 libvdpau1 \
+  libvorbis0a libvorbisenc2 libvorbisfile3 libxcb-shm0 libfaac-dev \
+  && apt-get -y autoclean \
+  && apt-get -y clean && apt-get -y autoremove && rm -rf /var/lib/apt/lists/*
+
+# Generate config file for building melted
+RUN echo "INSTALL_DIR=\"/usr\"" > /tmp/build-melted.conf \
+  && echo "SOURCE_DIR=\"/tmp/melted\"" >> /tmp/build-melted.conf \
+  && echo "SOURCES_CLEAN=1" >> /tmp/build-melted.conf \
+  && echo "AUTO_APPEND_DATE=0" >> /tmp/build-melted.conf \
+  && echo "CREATE_STARTUP_SCRIPT=0" >> /tmp/build-melted.conf \
+  && echo "FFMPEG_SUPPORT_FAAC=1" >> /tmp/build-melted.conf
+
+# Installing all build tools, download and build melted
+RUN apt-get update && apt-get install -y wget git automake autoconf libtool intltool g++ yasm swig \
+    libmp3lame-dev libgavl-dev libsamplerate-dev libxml2-dev ladspa-sdk \
+    libjack-dev libsox-dev libsdl-dev libsdl2-dev libsdl2-2.0-0 libegl1-mesa-dev libgles2-mesa-dev libgtk2.0-dev liboil-dev libsoup2.4-dev \
+    libqt4-dev libexif-dev libtheora-dev libvdpau-dev libvorbis-dev python-dev
+
+RUN wget https://www.nasm.us/pub/nasm/releasebuilds/2.13/nasm-2.13.tar.bz2 \
+  && tar xfj nasm-2.13.tar.bz2 \
+  && cd nasm-2.13 \
+  && ./autogen.sh \
+  && ./configure --prefix=/usr/local/ \
+  && make \
+  && make install
+
+RUN nasm -v
+
+RUN cd /tmp/ && git clone https://github.com/mltframework/mlt-scripts.git && \
+    \
+    /tmp/mlt-scripts/build/build-melted.sh -c /tmp/build-melted.conf && \
+    \
+    rm -r /tmp/melted && \
+    rm /tmp/build-melted.conf && \
+    rm -r /tmp/mlt-scripts
+
+RUN apt-get remove -y automake autoconf libtool intltool g++ libmp3lame-dev \
+    libgavl-dev libsamplerate-dev libxml2-dev libjack-dev libsox-dev libsdl-dev \
+    libgtk2.0-dev liboil-dev libsoup2.4-dev libqt4-dev libexif-dev libtheora-dev \
+    libvdpau-dev libvorbis-dev python-dev manpages manpages-dev g++ g++-4.6 git
+
+RUN apt-get -y autoclean && apt-get -y clean && apt-get -y autoremove && rm -rf /var/lib/apt/lists/* && \
+    rm -rf /tmp

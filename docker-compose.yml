@@ -1,0 +1,93 @@
+version: '3'
+services:
+  nginx:
+    build: ./symfony/docker/nginx
+    image: webplayout/nginx
+    ports:
+      - "80:80"
+      - "8583:8583"
+    volumes:
+      - ./symfony:/var/www
+      - media:/var/www/media:Z
+      - hls_live:/var/www/hls_live:Z
+    restart: always
+    networks:
+      webplayout:
+        ipv4_address: 172.27.0.106
+
+  php-fpm:
+    build: ./
+    # depends_on:
+    #   - melted
+    #   - mysql
+    image: webplayout/admin
+    ports:
+      - "9000:9000"
+      #- "8583:8583"
+    volumes:
+      - ./symfony:/var/www
+      - media:/var/www/media:Z
+      - hls_live:/var/www/hls_live:Z
+    restart: always
+    networks:
+      webplayout:
+        ipv4_address: 172.27.0.105
+    #   - weave
+
+  # scheduler:
+  #   image: webplayout/webplayout
+  #   restart: always
+  #   command: '/usr/sbin/cron -f'
+  melted:
+    devices:
+      - "/dev/dri/card0:/dev/dri/card0"
+      - "/dev/dri/renderD128:/dev/dri/renderD128"
+    build: ./melted
+    # depends_on:
+    #   - rtmp
+    #   #- rtsp
+    #   - vlc
+    image: webplayout/melted
+    # environment:
+    #   - MLT_PROFILE=atsc_720p_25
+    expose:
+      - "5250"
+      - "1234"
+
+    command: -c /etc/melted/melted-hls-vaapi.conf -nodetach
+    volumes:
+      - hls_live:/var/hls_live:Z
+      - media:/home/melted/videos:Z
+    restart: always
+    networks:
+      webplayout:
+        ipv4_address: 172.27.0.3
+
+  mysql:
+    image: yobasystems/alpine-mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: wQkex7mZMwxtwHk4KXtr
+      MYSQL_DATABASE: tv
+      MYSQL_USER: tv
+      MYSQL_PASSWORD: 8GnWFxFU9M5k5nHTVujr
+    expose:
+      - "3306"
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./tv.sql:/docker-entrypoint-initdb.d/tv.sql
+    restart: always
+    networks:
+      webplayout:
+        ipv4_address: 172.27.0.2
+
+networks:
+  webplayout:
+    ipam:
+      config:
+        - subnet: 172.27.0.0/16
+          #gateway: 172.27.0.1
+
+volumes:
+  hls_live:
+  media:
+  db-data:

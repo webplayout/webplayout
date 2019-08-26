@@ -330,7 +330,7 @@ class FileController extends AbstractController
                 // );
             }
 
-            $command = $this->getParameter('ffmpeg_path') . ' -i ' . escapeshellarg($fileName) . ' 2>&1';
+            $command = $this->getParameter('ffmpeg_path') . ' -hide_banner -i ' . escapeshellarg($fileName) . ' 2>&1';
 
             $output = shell_exec($command);
             $time = 0;

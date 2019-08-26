@@ -29,6 +29,8 @@ RUN docker-php-ext-install pdo_mysql bcmath
 # RUN bin/console doctrine:schema:update --force
 # RUN bin/console doctrine:fixtures:load
 
+RUN apk add ffmpeg
+
 RUN mkdir /var/www/media && chown www-data:www-data /var/www/media
 
 VOLUME ["/var/www/media"]

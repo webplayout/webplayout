@@ -30,10 +30,10 @@ class ScheduleWorkerCommand extends ContainerAwareCommand
         $em = $this->getContainer()->get('doctrine')->getManager();
 
         $date = new \DateTime;
-        //$date = $date->format('Y-m-d');
+        //$date = new \DateTime('2019-09-04 08:30:00');
 
         $schedules = $em->getRepository('App\Entity\Schedule')
-           ->findBy(array('date' => $date ));
+           ->findBy(['start' => new \DateTime($date->format('Y-m-d H:i:00')) ]);
 
         if (!sizeof($schedules)) {
             return;
@@ -61,15 +61,9 @@ class ScheduleWorkerCommand extends ContainerAwareCommand
         foreach ($schedules as $schedule) {
             $file = $schedule->getFile()->getFile();
             $output->writeln("Append $file");
-
-            $playout->append($file/*, null, null, $unit*/);
-        $playout->append('.68c39027-c7fc-11e9-a22d-0242ac1b0002.xml'/*, null, null, $unit*/);
-
+            $playout->append($file, null, null, $unit);
         }
 
-        //$playout->load($file, null, null, $unit);
-
-        // $playout->set_in($in,1);
         $playout->play($unit);
 
         $playout->Mvcp->disconnect();

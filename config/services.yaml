@@ -8,6 +8,8 @@ parameters:
     media_dir: /var/www/media
     ffmpeg_path: /usr/bin/ffmpeg
     logo: ''
+    melted_host: 172.27.0.3
+    melted_port: 5250
 
 services:
     # default configuration for services in *this* file
@@ -53,6 +55,17 @@ services:
         arguments:
            - '%media_dir%'
            - '%logo%'
+           - '@doctrine'
         tags:
             - { name: kernel.event_listener, event: app.clip.post_create, method: writeMlt }
             - { name: kernel.event_listener, event: app.clip.post_update, method: writeMlt }
+
+    # app_clip.listener.pre_persist:
+    #     class: App\EventListener\ClipprePersistListener
+    #     arguments:
+    #        # - '%media_dir%'
+    #        # - '%logo%'
+    #        - '@doctrine'
+    #     tags:
+    #         - { name: kernel.event_listener, event: app.clip.pre_create, method: prePersist }
+    #         #- { name: kernel.event_listener, event: app.clip.pre_update, method: prePersist }

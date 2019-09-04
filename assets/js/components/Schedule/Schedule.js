@@ -13,10 +13,25 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
 const localizer = Calendar.momentLocalizer(moment);
-const DnDCalendar = withDragAndDrop(Calendar);
+const DnDCalendar = withDragAndDrop(Calendar, {backend: false});
+
+import Sidebar from './ScheduleSidebar'
 
 class Schedule extends Component {
+
+    constructor(props) {
+      super(props)
+
+      //this.state = calendarInitialState
+
+      this.onEventDrop = this.onEventDrop.bind(this)
+      this.onClipDrop = this.onClipDrop.bind(this)
+
+    }
+
   state = {
+      draggedEvent: null,
+    clips: [],
     events: [
       {
         start: new Date(),
@@ -44,16 +59,17 @@ class Schedule extends Component {
         }
   };
 
-  onEventResize = (type, { event, start, end, allDay }) => {
-    this.setState(state => {
-      state.events[0].start = start;
-      state.events[0].end = end;
-      return { events: state.events };
-    });
+  onEventResize = ({ event, start, end }) => {
+    console.log('Not supported');
+    // this.setState(state => {
+    //   state.events[0].start = start;
+    //   state.events[0].end = end;
+    //   return { events: state.events };
+    // });
   };
 
   onEventDrop = ({ event, start, end, allDay }) => {
-
+    console.log('onEventDrop');
     const updated = {
           start: moment(start).format(),
           end: moment(end).format()
@@ -77,20 +93,27 @@ class Schedule extends Component {
 
   };
 
+  onClipDrop = ({ start, end, allDay }) => {
+console.log('drop')
+  };
+
   componentDidMount() {
 
       axios.get(`/files/`)
           .then(res => {
               const items = res.data._embedded.items;
               console.log(res.data._embedded.items);
-              //this.setState({ calendarEvents: items });
+              this.setState({ clips: items });
           })
 
     axios.get(`/schedules/`)
         .then(res => {
+            //const events = res.data._embedded.items;
             const events = res.data._embedded.items.map(function(event, index){
+                console.log(event);
                 event.start = new Date(event.start)
                 event.end = new Date(event.end)
+                event.allDay = false;
                 return event
             });
 
@@ -98,24 +121,67 @@ class Schedule extends Component {
         })
   }
 
+handleClips()
+{
+console.log('handleClips');
+};
+
+
+handleDragStart = event => {
+    this.setState({ draggedEvent: event })
+  }
+
+  handleDisplayDragItemInCell = () => {
+    this.setState({
+      displayDragItemInCell: !this.state.displayDragItemInCell,
+    })
+  }
+
+  dragFromOutsideItem = () => {
+    return this.state.draggedEvent
+  }
+
+customOnDragOver = event => {
+   // check for undroppable is specific to this example
+   // and not part of API. This just demonstrates that
+   // onDragOver can optionally be passed to conditionally
+   // allow draggable items to be dropped on cal, based on
+   // whether event.preventDefault is called
+   if (this.state.draggedEvent !== 'undroppable') {
+     console.log('preventDefault')
+     event.preventDefault()
+   }
+ }
+
   render() {
     return (
       <div className="App">
-      123
-        <DnDCalendar
-          defaultDate={new Date()}
-          defaultView="week"
-          events={this.state.events}
-          localizer={localizer}
-          formats={this.formats}
-          onEventDrop={this.onEventDrop}
-          onEventResize={this.onEventResize}
-          resizable
-          style={{ height: "100vh" }}
-        />
+        <DndProvider backend={HTML5Backend}>
+
+            <Sidebar events={this.state.clips}
+                onClickEvent={this.handleClips}
+            />
+
+            <DnDCalendar
+              defaultDate={new Date()}
+              defaultView="week"
+              events={this.state.events}
+              localizer={localizer}
+              formats={this.formats}
+              onEventDrop={this.onEventDrop}
+              onDropFromOutside={this.onClipDrop}
+              onDragOver={this.customOnDragOver}
+              onEventResize={this.onEventResize}
+              resizable
+              style={{ height: "100vh" }}
+            />
+
+        </DndProvider>
       </div>
     );
   }
 }
 
 export default Schedule;
+
+//export default DndProvider(HTML5Backend)(Schedule)

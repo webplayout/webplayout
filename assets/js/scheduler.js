@@ -1,11 +1,11 @@
 
 import React from 'react'
 import { render } from 'react-dom'
-// import SchedulerApp from './schedulerApp'
+
+import Calendar from './components/Calendar'
+
+render(<Calendar />, document.getElementById('root'))
+
+// import Schedule from './components/Schedule/Schedule'
 //
-// render(<SchedulerApp />, document.getElementById('root'))
-
-
-import Schedule from './schedule'
-
-render(<Schedule />, document.getElementById('root'))
+// render(<Schedule />, document.getElementById('root'))

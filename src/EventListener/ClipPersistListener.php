@@ -6,23 +6,24 @@ namespace App\EventListener;
 
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
 //use App\Entity\ClipFile;
+use App\Entity\File;
 
 class ClipPersistListener
 {
-    function __construct(string $media_dir, string $logo)
+    function __construct(string $media_dir, string $logo, $doctrine)
     {
         $this->media_dir = $media_dir;
         $this->logo = $logo;
+        $this->manager = $doctrine->getManager();
     }
 
     function writeMlt(ResourceControllerEvent $event)
     {
-
         $date = date('Y-m-d');
         $date = $event->getSubject()->getId();
         $files = $event->getSubject()->getFiles();
 
-        $filename = sprintf('%s.%s.xml', $this->media_dir . DIRECTORY_SEPARATOR, $date);
+        $filename = sprintf('%s.xml', $date);
 
         $xml = new \simpleXmlElement('<mlt/>');
 
@@ -105,6 +106,31 @@ class ClipPersistListener
             }
         }
 
-        file_put_contents($filename, $xml->asXML());
+        file_put_contents($this->media_dir . DIRECTORY_SEPARATOR . $filename, $xml->asXML());
+
+
+        $duration = array_sum($event->getSubject()->getFiles()->map(function($v) {
+                return $v->getFile()->getDuration();
+        })->toArray());
+
+        if (!$event->getSubject()->getFile()) {
+
+            $file = new File;
+            $file->setFile($filename);
+            $file->setName($filename);
+            $file->setDuration($duration);
+            $file->setType('clip');
+
+            $this->manager->persist($file);
+
+            $event->getSubject()->setFile($file);
+
+            $this->manager->persist($event->getSubject());
+
+        } else {
+            $this->manager->persist($event->getSubject()->getFile()->setDuration($duration));
+        }
+
+        $this->manager->flush();
     }
 }

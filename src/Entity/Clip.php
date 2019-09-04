@@ -35,6 +35,12 @@ class Clip implements ResourceInterface
      */
     private $id;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="File", inversedBy="schedules")
+     * @ORM\JoinColumn(name="file_id", referencedColumnName="id")
+     */
+    private $file;
+
     public function __construct()
     {
         $this->files = new \Doctrine\Common\Collections\ArrayCollection();
@@ -98,5 +104,17 @@ class Clip implements ResourceInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    public function setFile(File $file): self
+    {
+        $this->file = $file;
+
+        return $this;
     }
 }

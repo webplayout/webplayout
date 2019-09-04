@@ -31,7 +31,7 @@ Encore
         './assets/css/login.sass'
     ])
     .addEntry('scheduler', './assets/js/scheduler.js')
-    .addEntry('schedule', './assets/js/schedule.js')
+    //.addEntry('schedule', './assets/js/schedule.js')
     .addEntry('clip', './assets/js/clip.js')
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')

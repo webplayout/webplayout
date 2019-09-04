@@ -21,33 +21,38 @@ class Schedule implements ResourceInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\NotBlank
      */
     private $title;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Assert\NotBlank
      */
     private $start;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Assert\NotBlank
      */
     private $end;
-    
+
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="File", inversedBy="schedules")
+     * @ORM\JoinColumn(name="file_id", referencedColumnName="id")
+     * @Assert\NotBlank
      */
-    private $fileId;
-    
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $date;
-    
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $ord;
+    private $file;
+
+    // /**
+    //  * @ORM\Column(type="date", nullable=true)
+    //  */
+    // private $date;
+
+    // /**
+    //  * @ORM\Column(type="integer", nullable=true)
+    //  */
+    // private $ord;
 
     public function getId(): ?int
     {
@@ -89,16 +94,33 @@ class Schedule implements ResourceInterface
 
         return $this;
     }
-    
-    public function getFileId(): ?string
+
+    public function getFile(): ?File
     {
-        return $this->fileId;
+        return $this->file;
     }
 
-    public function setFileId(string $fileId): self
+    public function setFile(File $file): self
     {
-        $this->fileId = $fileId;
+        $this->file = $file;
 
         return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTimeInterface $date): self
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getOrd(): ?int
+    {
+        return $this->ord;
     }
 }

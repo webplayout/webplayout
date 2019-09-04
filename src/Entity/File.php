@@ -23,6 +23,14 @@ class File implements ResourceInterface
     private $name;
 
     /**
+     * @var string $type
+     *
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank
+     */
+    private $type;
+
+    /**
      * @var string $file
      *
      * @ORM\Column(type="string")
@@ -69,6 +77,29 @@ class File implements ResourceInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     * @return Files
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**

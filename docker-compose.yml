@@ -36,10 +36,19 @@ services:
         ipv4_address: 172.27.0.105
     #   - weave
 
-  # scheduler:
-  #   image: webplayout/webplayout
-  #   restart: always
-  #   command: '/usr/sbin/cron -f'
+  cron:
+    depends_on:
+      - mysql
+    image: webplayout/admin
+    restart: always
+    command: crond -l 2 -f
+    volumes:
+      - .:/var/www
+      - media:/var/www/media:Z
+    networks:
+      webplayout:
+        ipv4_address: 172.27.0.8
+
   melted:
     devices:
       - "/dev/dri/card0:/dev/dri/card0"

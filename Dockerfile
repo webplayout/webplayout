@@ -33,6 +33,8 @@ RUN apk add ffmpeg
 
 RUN mkdir /var/www/media && chown www-data:www-data /var/www/media
 
+RUN echo '*	*	*	*	*	/var/www/bin/console webplayout:schedule-worker' >> /var/spool/cron/crontabs/root
+
 VOLUME ["/var/www/media"]
 
 EXPOSE 9000

@@ -4,9 +4,13 @@ ARG NGINX_VERSION=1.16
 
 FROM php:${PHP_VERSION}-fpm-alpine
 
+
+COPY . /var/www
+
 WORKDIR /var/www
 
-#COPY . /var/www
+RUN mkdir -p var/cache var/log
+RUN chmod -R 777 var/cache var/log
 
 #RUN rm -rf /var/www/html
 

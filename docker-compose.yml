@@ -11,7 +11,7 @@ services:
       - "80:80"
       - "8583:8583"
     volumes:
-      - .:/var/www
+      #- .:/var/www
       - media:/var/www/media:Z
       - hls_live:/var/www/hls_live:Z
     restart: always
@@ -27,7 +27,7 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - .:/var/www
+      #- .:/var/www
       - media:/var/www/media:Z
       #- hls_live:/var/www/hls_live:Z
     restart: always
@@ -43,7 +43,7 @@ services:
     restart: always
     command: crond -l 2 -f
     volumes:
-      - .:/var/www
+      #- .:/var/www
       - media:/var/www/media:Z
     networks:
       webplayout:

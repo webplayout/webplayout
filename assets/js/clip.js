@@ -68,9 +68,9 @@ function updatePlaylistDuration()
     $.each($('#playlist').children(), function(index, row) {
         currentDuration += parseInt($(row).data('duration'));
     });
-    
+
     currentDuration = formatDurationToReadableTime(currentDuration);
-    
+
     $('#playlistDuration').html(currentDuration);
 }
 
@@ -81,7 +81,7 @@ function updatePlaylistItemsStartTime()
     $.each($('#playlist').children(), function(index, row) {
 
         var startTime = formatDurationToReadableTime(currentDuration);
-        
+
         if($(row).find('span.start').length) {
             $(row).find('span.start').text(startTime);
         } else {
@@ -96,22 +96,22 @@ updateInput = (elem) => {
     let items = $(elem).children().map((index, el) => {
         return $(el).data('id');
     }).toArray();
-    
+
     $('#app_clip_files').val(items.join(','));
 };
 
 $("#playlist").sortable({
     revert: true,
     over: function( event, ui ) {
-        
+
         ui.item.css('width', Math.ceil($(event.target).width()) + 'px');
-    
+
     },
     update: (event, ui)  => {
-        
+
         updatePlaylistDuration();
         updatePlaylistItemsStartTime();
-    
+
         updateInput(event.target);
     }
 });
@@ -122,7 +122,7 @@ $( "#catalog" ).resizable({
     alsoResize: "#tabs-1"
 });
 
-$.getJSON('/files/', {}, function(data) {
+$.getJSON('/files/', {limit:1000}, function(data) {
 
     $(data._embedded.items).each(function(index, item){
         $('#tabs-1 ul').append('<li data-id="' + item.id + '" data-duration="' + item.duration + '"'
@@ -139,13 +139,13 @@ $.getJSON('/files/', {}, function(data) {
         stop: function(event, ui) {
             $('#playlist .ui-icon-minus').click(removeButtonHandler);
             //$(ui.helper).css('width', `auto`);
-            
+
             $(ui.helper).css('transform', 'rotate(0)');
             $(ui.helper).css('webkit-transform', 'rotate(0)');
         },
         start: function(event, ui) {
           //$(ui.helper).css('width', `${ $(event.target).width() }px`);
-          
+
           $(ui.helper).css('transform', 'rotate(-7deg)');
           $(ui.helper).css('webkit-transform', 'rotate(-7deg)');
           //$(ui.helper).css('display', 'inline-block');
@@ -155,9 +155,9 @@ $.getJSON('/files/', {}, function(data) {
     });
 
     $('#playlist .ui-icon-minus').click(removeButtonHandler);
-    
+
     $('#playlist a.ui-draggable').remove();
-    
+
     updatePlaylistDuration();
     updatePlaylistItemsStartTime();
 });

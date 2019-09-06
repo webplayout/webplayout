@@ -1,54 +1,64 @@
 {% extends 'base.html.twig' %}
 
+{% import 'Macros/buttons.html.twig' as buttons %}
+{% import 'Macros/pagination.html.twig' as pagination %}
+
 {% block body %}
 
-<h1>File list</h1> <a href="{{ path('file_new') }}">upload</a>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Files</h1>
+      <div class="btn-toolbar mb-2 mb-md-0">
+        <a class="btn btn-sm btn-outline-secondary mr-2" href="{{ path('file_new') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload-cloud"><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path><polyline points="16 16 12 12 8 16"></polyline></svg>
+            Upload
+        </a>
+      </div>
+    </div>
 
-<table class="table table-striped table-hover">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>File</th>
-            <th>Duration</th>
-            <th>Id</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for resource in resources %}
-        <tr>
-            <td><a href="{{ path(configuration.getRouteName('show'), configuration.vars.route.parameters|default({ 'id': resource.id })) }}">{{ resource.name }}</a></td>
-            <td>{{ resource.file }}</td>
-            <td>{{ resource.duration }}</td>
-            <td>{{ resource.id }}</td>
-            <td>
-                <ul>
-                    <li>
-                        <a href="{{ path(configuration.getRouteName('show'), configuration.vars.route.parameters|default({ 'id': resource.id })) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{#{ path('file_edit', { 'id': entity.id }) }#}">edit</a>
-                    </li>
-                </ul>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-{#
-<ul>
-    <li>
-        <a href="{{ path('file_import') }}">
-            Import Files
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('file_new') }}">
-            Add file manualy
-        </a>
-    </li>
-</ul>
-#}
+    {% if resources|length > 0 %}
+        <table class="table table-striped table-hover table-borderless">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    {#<th>File</th>#}
+                    <th>Duration</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for resource in resources %}
+                <tr>
+                    <td><a href="{{ path(configuration.getRouteName('update'), { 'id': resource.id }) }}">{{ resource.id }}</a></td>
+                    <td><a href="{{ path(configuration.getRouteName('update'), { 'id': resource.id }) }}">{{ resource.name }}</a></td>
+                    {#<td><a href="{{ path(configuration.getRouteName('update'), { 'id': resource.id }) }}">{{ resource.file }}</a></td>#}
+                    <td>{{ resource.duration }}</td>
+                    <td>
+
+                        <div class="btn-group mr-2">
+                            <a class="btn btn-outline-secondary" href="{{ path(configuration.getRouteName('show'), configuration.vars.route.parameters|default({ 'id': resource.id })) }}">Show</a>
+                            <a class="btn btn-outline-secondary" href="{{ path(configuration.getRouteName('update'), configuration.vars.route.parameters|default({ 'id': resource.id })) }}">Edit</a>
+                        </div>
+
+                        {{ buttons.delete(
+                            path(configuration.getRouteName('delete'), configuration.vars.route.parameters|default({ 'id': resource.id })),
+                            false, true, resource.id
+                        )}}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="ui stackable grid segment">
+            <div class="ui sixteen wide column">
+                {{ messages.info('sylius.ui.no_results_to_display') }}
+            </div>
+        </div>
+    {% endif %}
+
+    {{ pagination.simple(resources) }}
+
 {% endblock %}
 
 

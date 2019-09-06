@@ -1,0 +1,57 @@
+{#
+        <div class="ui secondary pointing menu">
+
+          <a class="item{% if app.request.get('_route') == 'default_index' %} active{% endif %}" href="{{ path('default_index') }}">Home</a>
+          <a class="item{% if app.request.get('_route') == 'default_stream' %} active{% endif %}" href="{{ path('default_stream') }}">Stream</a>
+          <a class="item{% if app.request.get('_route') == 'app_clip_index' %} active{% endif %}" href="{{ path('app_clip_index') }}">Clips</a>
+          <a class="item{% if app.request.get('_route') == 'app_file_index' %} active{% endif %}" href="{{ path('app_file_index') }}">Files</a>
+
+
+        <a class="item{% if app.request.get('_route') == 'file_new' %} active{% endif %}" href="{{ path('file_new') }}">Upload</a>
+
+          <div class="right menu">
+              <a class="ui item" href="{{ path('app_logout') }}">Logout</a>
+          </div>
+        </div>
+        <div class="ui segment">
+
+        </div>
+#}
+<nav class="col-md-2 d-none d-md-block bg-light sidebar">
+  <div class="sidebar-sticky">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link{% if app.request.get('_route') == 'default_index' %} active{% endif %}" href="{{ path('default_index') }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          Schedule {% if app.request.get('_route') == 'default_index' %}<span class="sr-only">(current)</span>{% endif %}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link{% if app.request.get('_route') == 'default_stream' %} active{% endif %}" href="{{ path('default_stream') }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-video"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+
+          Stream {% if app.request.get('_route') == 'default_stream' %}<span class="sr-only">(current)</span>{% endif %}
+        </a>
+      </li>
+
+    </ul>
+
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+      <span>Media</span>
+    </h6>
+    <ul class="nav flex-column mb-2">
+        <li class="nav-item">
+          <a class="nav-link{% if app.request.get('_route') == 'app_clip_index' %} active{% endif %}" href="{{ path('app_clip_index') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-film"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>
+            Clips {% if app.request.get('_route') == 'app_clip_index' %}<span class="sr-only">(current)</span>{% endif %}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{% if app.request.get('_route') == 'app_file_index' %} active{% endif %}" href="{{ path('app_file_index') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+            Files {% if app.request.get('_route') == 'app_file_index' %}<span class="sr-only">(current)</span>{% endif %}
+          </a>
+        </li>
+    </ul>
+  </div>
+</nav>

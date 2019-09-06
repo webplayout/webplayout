@@ -1,44 +1,60 @@
 {% extends 'base.html.twig' %}
 
-{#% import '@SyliusUi/Macro/messages.html.twig' as messages %#}
-{% import '@SyliusResource/Macros/buttons.html.twig' as buttons %}
+{% import 'Macros/buttons.html.twig' as buttons %}
+{% import 'Macros/pagination.html.twig' as pagination %}
 
 {% block body %}
-    <style>
-        #root {
-            display: flex;
-            justify-content: space-between;
-        }
-    </style>
-    <div id='root'></div>
-    
-    {% if resources|length > 0 %}
 
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Clips</h1>
+  <div class="btn-toolbar mb-2 mb-md-0">
+    <a class="btn btn-sm btn-outline-secondary mr-2" href="{{ path(configuration.getRouteName('create'))}}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        Compose
+    </a>
+  </div>
+</div>
+
+
+{% if resources|length > 0 %}
+    <table class="table table-striped table-hover table-borderless">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
         {% for resource in resources %}
-            {{resource.id}} /
-            {{resource.name}} /
-            <a href="{{ path(configuration.getRouteName('update'), configuration.vars.route.parameters|default({ 'id': resource.id })) }}">Edit</a> /
-            <a href="{{ path(configuration.getRouteName('delete'), configuration.vars.route.parameters|default({ 'id': resource.id })) }}">Delete</a>
-            {{ buttons.delete(
-                path(configuration.getRouteName('delete'), configuration.vars.route.parameters|default({ 'id': resource.id }))
-            )}}
-            <br>
-            
+            <tr>
+                <td><a href="{{ path(configuration.getRouteName('update'), { 'id': resource.id }) }}">{{ resource.id }}</a></td>
+                <td><a href="{{ path(configuration.getRouteName('update'), { 'id': resource.id }) }}">{{ resource.name }}</a></td>
+                <td>
+
+                    <div class="btn-group mr-2">
+                        <a class="btn btn-outline-secondary" href="{{ path(configuration.getRouteName('show'), configuration.vars.route.parameters|default({ 'id': resource.id })) }}">Show</a>
+                        <a class="btn btn-outline-secondary" href="{{ path(configuration.getRouteName('update'), configuration.vars.route.parameters|default({ 'id': resource.id })) }}">Edit</a>
+                    </div>
+
+                    {{ buttons.delete(
+                        path(configuration.getRouteName('delete'), configuration.vars.route.parameters|default({ 'id': resource.id })),
+                        false, true, resource.id
+                    )}}
+                </td>
+            </tr>
         {% endfor %}
-
-    {% else %}
-        <div class="ui stackable grid segment">
-            <div class="ui sixteen wide column">
-                {{ messages.info('sylius.ui.no_results_to_display') }}
-            </div>
+        </tbody>
+    </table>
+{% else %}
+    <div class="ui stackable grid segment">
+        <div class="ui sixteen wide column">
+            {{ messages.info('sylius.ui.no_results_to_display') }}
         </div>
-    {% endif %}
+    </div>
+{% endif %}
 
-{#% import '@SyliusUi/Macro/messages.html.twig' as messages %#}
-{#% import '@SyliusUi/Macro/pagination.html.twig' as pagination %#}
-
-<div class="ui clearing hidden divider"></div>
-
+{{ pagination.simple(resources) }}
 
 {% endblock %}
 

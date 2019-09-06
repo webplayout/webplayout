@@ -2,7 +2,7 @@
 const $ = require('jquery');
 const Resumable = require('resumablejs')
 
-require('resumablejs/samples/Node.js/public/style.css')
+//require('resumablejs/samples/Node.js/public/style.css')
 require('resumablejs/samples/Node.js/public/pause.png')
 require('resumablejs/samples/Node.js/public/resume.png')
 require('resumablejs/samples/Node.js/public/cancel.png')

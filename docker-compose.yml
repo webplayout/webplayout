@@ -23,7 +23,7 @@ services:
     depends_on:
       - mysql
     build: .
-    image: webplayout/admin
+    image: webplayout/php_fpm
     ports:
       - "9000:9000"
     volumes:
@@ -39,7 +39,7 @@ services:
   cron:
     depends_on:
       - mysql
-    image: webplayout/admin
+    image: webplayout/php_fpm
     restart: always
     command: crond -l 2 -f
     volumes:

@@ -117,7 +117,7 @@ class ClipPersistListener
 
             $file = new File;
             $file->setFile($filename);
-            $file->setName($filename);
+            $file->setName($event->getSubject()->getName());
             $file->setDuration($duration);
             $file->setType('clip');
 
@@ -128,7 +128,11 @@ class ClipPersistListener
             $this->manager->persist($event->getSubject());
 
         } else {
-            $this->manager->persist($event->getSubject()->getFile()->setDuration($duration));
+            $this->manager->persist(
+                $event->getSubject()->getFile()
+                    ->setDuration($duration)
+                    ->setName($event->getSubject()->getName())
+            );
         }
 
         $this->manager->flush();

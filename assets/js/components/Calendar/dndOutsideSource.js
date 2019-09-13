@@ -146,7 +146,7 @@ class Dnd extends React.Component {
     const event = {
       title: draggedEvent.title,
       start,
-      end: new Date(moment(start).add(draggedEvent.duration, 'minutes').format()),
+      end: new Date(moment(start).add(draggedEvent.duration, 'seconds').format()),
       file: draggedEvent.file
     }
 

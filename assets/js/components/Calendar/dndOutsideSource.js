@@ -292,7 +292,7 @@ this.loadMore();
 
   loadMore = () => {
 
-      return axios.get(`/files/?page=` + (this.state.page+1))
+      return axios.get(`/files/?sorting[type]=ASC&sorting[id]=DESC&page=` + (this.state.page+1))
           .then(res => {
               const clips = res.data._embedded.items;
               const items = [];

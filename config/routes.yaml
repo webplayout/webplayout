@@ -16,3 +16,11 @@ app_file:
     resource: |
         alias: app.file
     type: sylius.resource_api
+
+app_file_index:
+    path: /files/
+    methods: [GET]
+    defaults:
+        _controller: app.controller.file:indexAction
+        _sylius:
+            sortable: true

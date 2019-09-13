@@ -274,7 +274,7 @@ class Dnd extends React.Component {
 this.loadMore();
 
 
-      axios.get(`/schedules/`)
+      axios.get(`/schedules/?limit=10000`)
           .then(res => {
               const items = res.data._embedded.items;
 

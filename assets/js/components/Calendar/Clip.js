@@ -11,7 +11,6 @@ export default class Clip extends React.Component {
           style={{
             border: '2px solid gray',
             borderRadius: '4px',
-            width: '100px',
             margin: '10px',
             textAlign: "center"
           }}

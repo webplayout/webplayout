@@ -20,40 +20,6 @@ const formatName = (name, count) => `${name}  ${count}`
 import axios from 'axios'
 import InfiniteScroll from 'react-infinite-scroller'
 
-class MyEvent extends React.Component {
-    constructor(props){
-        super(props)
-    }
-    componentDidMount(){
-        //MyGlobal.popOver();
-    }
-    render(){
-        return (
-        <div>
-            <div
-                    className="custom_event_content"
-                    data-toggle="popover"
-                    data-placement="top"
-                    data-popover-content={"#custom_event_" + this.props.event.id}
-                    tabIndex="0"
-                    >
-                {this.props.event.title}
-            </div>
-
-            <div className="hidden" id={"custom_event_" + this.props.event.id} >
-              <div className="popover-heading">
-                {this.props.event.driver}
-              </div>
-
-              <div className="popover-body">
-                {this.props.event.title}<br/>
-              </div>
-            </div>
-        </div>
-        );
-    }
-}
-
 class Dnd extends React.Component {
 
   static propTypes = {
@@ -318,11 +284,6 @@ this.loadMore();
 
   render() {
 
-      const components = {
-         // event: MyEvent
-      }
-
-
     return (
       <div>
         <div className="" style={{ display: 'flex', position:'fixed', width:'200px' }}>
@@ -348,7 +309,6 @@ this.loadMore();
           </div>
         </div>
         <DragAndDropCalendar style={{marginLeft:'200px'}}
-          components={components}
           selectable
           localizer={this.props.localizer}
           events={this.state.events}

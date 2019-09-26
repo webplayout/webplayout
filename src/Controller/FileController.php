@@ -105,6 +105,7 @@ class FileController extends AbstractController
             $entity = new File();
             $entity->setName(basename($originalFilename));
             $entity->setFile($originalFilename);
+            $entity->setType('file');
             $entity->setDuration($time);
 
             $em = $this->getDoctrine()->getManager();

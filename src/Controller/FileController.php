@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Repository\FileRepository;
+use App\Service\MediaDuration;
 /**
  * Files controller.
  *
@@ -34,7 +35,7 @@ class FileController extends AbstractController
     /**
      * @Route("/files/upload", methods={"POST"}, name="file_upload")
      */
-    function uploadAction(Request $request)
+    function uploadAction(Request $request, MediaDuration $mediaDuration)
     {
         $media_dir = $this->getParameter('media_dir');
 
@@ -85,28 +86,13 @@ class FileController extends AbstractController
                 // );
             }
 
-            $command = $this->getParameter('ffmpeg_path') . ' -hide_banner -i ' . escapeshellarg($fileName) . ' 2>&1';
-
-            $output = shell_exec($command);
-            $time = 0;
-            if(preg_match('/\n\s+Duration: (.*?),/', $output, $matches))
-            {
-                // valid media file
-                $parts = explode(':',$matches[1]);
-
-                $time = 0;
-
-                $time += $parts[0]*60*60;
-                $time += $parts[1]*60;
-                $time += $parts[2];
-                $time = round($time);
-            }
+            $duration = $mediaDuration->getDuration($fileName);
 
             $entity = new File();
             $entity->setName(basename($originalFilename));
             $entity->setFile($originalFilename);
             $entity->setType('file');
-            $entity->setDuration($time);
+            $entity->setDuration($duration);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);

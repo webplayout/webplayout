@@ -69,3 +69,8 @@ services:
     #     tags:
     #         - { name: kernel.event_listener, event: app.clip.pre_create, method: prePersist }
     #         #- { name: kernel.event_listener, event: app.clip.pre_update, method: prePersist }
+
+    App\Service\MediaDuration:
+        arguments:
+           - '%ffmpeg_path%'
+        public: true

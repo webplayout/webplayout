@@ -1,22 +1,3 @@
-{#
-        <div class="ui secondary pointing menu">
-
-          <a class="item{% if app.request.get('_route') == 'default_index' %} active{% endif %}" href="{{ path('default_index') }}">Home</a>
-          <a class="item{% if app.request.get('_route') == 'default_stream' %} active{% endif %}" href="{{ path('default_stream') }}">Stream</a>
-          <a class="item{% if app.request.get('_route') == 'app_clip_index' %} active{% endif %}" href="{{ path('app_clip_index') }}">Clips</a>
-          <a class="item{% if app.request.get('_route') == 'app_file_index' %} active{% endif %}" href="{{ path('app_file_index') }}">Files</a>
-
-
-        <a class="item{% if app.request.get('_route') == 'file_new' %} active{% endif %}" href="{{ path('file_new') }}">Upload</a>
-
-          <div class="right menu">
-              <a class="ui item" href="{{ path('app_logout') }}">Logout</a>
-          </div>
-        </div>
-        <div class="ui segment">
-
-        </div>
-#}
 <nav class="col-md-2 d-none d-md-block bg-light sidebar">
   <div class="sidebar-sticky">
     <ul class="nav flex-column">

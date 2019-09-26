@@ -23,4 +23,3 @@ app_file_index:
 
 hls_stream:
   path: /hls/live.m3u8
-  host: "localhost:8583"

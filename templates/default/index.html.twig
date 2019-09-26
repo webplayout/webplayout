@@ -5,12 +5,10 @@
 {% endblock %}
 
 {% block stylesheets %}
-<style type="text/css">
-    body {margin:  0}
-</style>
-{{ parent() }}
+    {{ parent() }}
     {{ encore_entry_link_tags('scheduler') }}
 {% endblock %}
+
 {% block javascripts %}
     {{ encore_entry_script_tags('scheduler') }}
 {% endblock %}

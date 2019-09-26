@@ -318,7 +318,7 @@ this.loadMore();
           }
           onDropFromOutside={this.onDropFromOutside}
           onDragOver={this.customOnDragOver}
-
+          showMultiDayTimes="true"
           defaultView="week"
           defaultDate={new Date()}
           onSelectSlot={this.showDelete}

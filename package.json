@@ -22,8 +22,6 @@
     "resumablejs": "^1.1.0",
     "sass-loader": "^7.0.1",
     "video.js": "^7.6.0",
-    "videojs-contrib-hls": "^5.15.0",
-    "videojs-flash": "^2.2.0",
     "webpack-notifier": "^1.6.0"
   },
   "license": "UNLICENSED",

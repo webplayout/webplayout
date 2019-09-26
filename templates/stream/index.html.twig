@@ -2,25 +2,29 @@
 
 {% block body %}
 
-<div class="row" style="margin-bottom: 10px">
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Stream</h1>
+</div>
+
+<div class="table-responsive">
     <video id="live" width=640 height=360 class="video-js vjs-default-skin" controls muted>
       <source
-         src="http://localhost:8583/hls/live.m3u8"
+         src="{{path('hls_stream')}}"
          type="application/x-mpegURL">
     </video>
 </div>
 
-{#{ public_ip }#}
-
 {% endblock %}
+
 {% block stylesheets %}
     {{ encore_entry_link_tags('stream') }}
 {% endblock %}
-{% block javascripts %}
 
+{% block javascripts %}
     {{ encore_entry_script_tags('stream') }}
 
     <script>
+
         (function(window, videojs) {
           var player = window.player = videojs('live');
 

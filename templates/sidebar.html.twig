@@ -8,10 +8,10 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link{% if app.request.get('_route') == 'default_stream' %} active{% endif %}" href="{{ path('default_stream') }}">
+        <a class="nav-link{% if app.request.get('_route') == 'stream_index' %} active{% endif %}" href="{{ path('stream_index') }}">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-video"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
 
-          Stream {% if app.request.get('_route') == 'default_stream' %}<span class="sr-only">(current)</span>{% endif %}
+          Stream {% if app.request.get('_route') == 'stream_index' %}<span class="sr-only">(current)</span>{% endif %}
         </a>
       </li>
 

@@ -8,16 +8,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Default controller.
+ * Stream controller.
  *
  */
-class DefaultController extends AbstractController
+class StreamController extends AbstractController
 {
     /**
-     * @Route("/", methods={"GET"}, name="default_index")
+     * @Route("/stream", methods={"GET"}, name="stream_index")
      */
     public function index(): Response
     {
-        return $this->render('default/index.html.twig');
+        return $this->render('stream/index.html.twig');
     }
 }

@@ -1,7 +1,3 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
-
 app_clip:
     resource: |
         alias: app.clip
@@ -24,3 +20,7 @@ app_file_index:
         _controller: app.controller.file:indexAction
         _sylius:
             sortable: true
+
+hls_stream:
+  path: /hls/live.m3u8
+  host: "localhost:8583"

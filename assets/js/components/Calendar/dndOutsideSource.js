@@ -6,7 +6,6 @@ import PropTypes, { element } from 'prop-types'
 
 import moment from "moment";
 
-import Card from './Card'
 import Clip from './Clip'
 
 //import css

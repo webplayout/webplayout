@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Settings</h1>
+</div>
+
+<div class="table-responsive">
+    {{ form_start(form, {'action': path('settings_save'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
+
+    {{ form_widget(form) }}
+
+    {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+</div>
+
+{% endblock %}

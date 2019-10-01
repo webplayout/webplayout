@@ -120,12 +120,18 @@ class Dnd extends React.Component {
   }
 
   moveEvent({ event, start, end, isAllDay: droppedOnAllDaySlot }) {
+    // end value fix; end value is incorrect when event duration is 24h
+    const ms = moment(event.end).diff(moment(event.start));
+
+    end = moment(start).add(moment.duration(ms));
+
     const { events } = this.state
     const updatedEvent = { start, end }
 
     axios.patch(`/schedules/` + event.id, updatedEvent)
         .then(res => {
 
+            // no response, use updatedEvent instead
             events.map((item) => {
                 if(item.id == event.id)
                 {

@@ -1,0 +1,36 @@
+.delete {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+}
+
+#external-events .card {
+    margin: 2px;
+    border: 2px solid gray;
+    border-radius: 4px;
+    overflow: hidden
+}
+
+#external-events {
+    z-index: 2;
+    border: 1px solid #ccc;
+    background: #eee;
+    overflow-y: scroll;
+}
+
+#external-events .fc-event {
+    margin: 1em 0;
+    cursor: move;
+}
+
+#calendar-container {
+    position: relative;
+    z-index: 1;
+    margin-left: 200px;
+}
+
+#calendar {
+    max-width: 900px;
+    margin: 20px auto;
+}

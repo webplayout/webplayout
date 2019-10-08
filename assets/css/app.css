@@ -1,6 +1,7 @@
 body {
     background-color: lightgray;
     font-size: .875rem;
+    min-width: 1000px
 }
 
 .feather {
@@ -59,7 +60,7 @@ body {
 }
 
 .sidebar-heading {
-font-size: .75rem;
+    font-size: .75rem;
     text-transform: uppercase;
 }
 

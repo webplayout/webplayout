@@ -5,31 +5,32 @@ declare(strict_types=1);
 namespace App\EventListener;
 
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
-//use App\Entity\ClipFile;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use App\Entity\File;
 
 class ClipPersistListener
 {
-    function __construct(string $media_dir, string $logo, $doctrine)
+    function __construct(string $media_dir, RegistryInterface $doctrine)
     {
         $this->media_dir = $media_dir;
-        $this->logo = $logo;
         $this->manager = $doctrine->getManager();
     }
 
     function writeMlt(ResourceControllerEvent $event)
     {
-        $date = date('Y-m-d');
-        $date = $event->getSubject()->getId();
+        $id = $event->getSubject()->getId();
         $files = $event->getSubject()->getFiles();
 
-        $filename = sprintf('%s.xml', $date);
+        $filename = sprintf('%s.xml', $id);
 
         $xml = new \simpleXmlElement('<mlt/>');
 
         if (sizeof($files)) {
 
-            $logo = $this->logo;
+            $logoSetting = $this->manager->getRepository('App\Entity\Setting')
+                ->findOneBy(['name' => 'logo']);
+
+            $logo = $logoSetting ? $logoSetting->getValue() : '';
 
             if ($logo) {
                 $producer = $xml->addChild('producer');
@@ -54,7 +55,7 @@ class ClipPersistListener
             }
 
             $playlist = $xml->addChild('playlist');
-            $playlist->addAttribute('id', 'playlist-' . $date);
+            $playlist->addAttribute('id', 'playlist-' . $id);
 
             foreach ($files as $producerIndex => $resource) {
                 $resource = $resource->getFile();
@@ -69,7 +70,7 @@ class ClipPersistListener
                 $multitrack = $tracktor->addChild('multitrack');
 
                 $trackPlaylist = $multitrack->addChild('track');
-                $trackPlaylist->addAttribute('producer', 'playlist-' . $date);
+                $trackPlaylist->addAttribute('producer', 'playlist-' . $id);
 
                 $trackLogo = $multitrack->addChild('track');
                 $trackLogo->addAttribute('producer','playlistLogo');

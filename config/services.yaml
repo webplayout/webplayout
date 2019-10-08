@@ -54,7 +54,6 @@ services:
         class: App\EventListener\ClipPersistListener
         arguments:
            - '%media_dir%'
-           - '%logo%'
            - '@doctrine'
         tags:
             - { name: kernel.event_listener, event: app.clip.post_create, method: writeMlt }

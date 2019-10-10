@@ -1,0 +1,42 @@
+sylius_grid:
+    grids:
+        app_file:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: App\Entity\File
+            filters:
+                search:
+                    type: string
+                    label: false
+                    options:
+                        fields:
+                            - name
+                    form_options:
+                        type: contains
+                    enabled: true
+                    position: 100
+                type:
+                    type: string
+                    label: false
+                    options:
+                        fields:
+                            - type
+                    form_options:
+                        type: equal
+                    enabled: true
+                    position: 100
+
+            sorting:
+                name2: asc
+
+            fields:
+                name:
+                    type: string
+                    enabled: true
+                    sortable: ~
+                type:
+                    type: string
+                    enabled: true
+
+            limits: [30, 12, 48]

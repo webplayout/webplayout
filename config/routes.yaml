@@ -11,15 +11,12 @@ app_schedule:
 app_file:
     resource: |
         alias: app.file
-    type: sylius.resource_api
-
-app_file_index:
-    path: /files/
-    methods: [GET]
+        grid: app_file
+    type: sylius.resource
     defaults:
-        _controller: app.controller.file:indexAction
-        _sylius:
-            sortable: true
+        # _sylius: # Uncommenting this will remove grid filtering & sorting
+        #     filterable: true
+        #     sortable: true
 
 hls_stream:
   path: /hls/live.m3u8

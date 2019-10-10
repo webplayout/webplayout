@@ -224,6 +224,9 @@
     "swiftmailer/swiftmailer": {
         "version": "v6.2.1"
     },
+    "sylius/grid-bundle": {
+        "version": "v1.6.1"
+    },
     "sylius/registry": {
         "version": "v1.4.1"
     },

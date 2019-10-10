@@ -1,34 +1,88 @@
 const $ = require('jquery');
 
-require("jquery-ui/ui/widgets/tabs");
 require("jquery-ui/ui/widgets/draggable");
 require("jquery-ui/ui/widgets/sortable");
-require("jquery-ui/ui/widgets/resizable");
 
-require("jquery-ui/themes/base/all.css");
-require("jquery-ui/themes/base/tabs.css");
+require("jquery-ui/themes/base/draggable.css");
 require("jquery-ui/themes/base/sortable.css");
-require("jquery-ui/themes/base/resizable.css");
 
 require('../global.scss')
 
-//<link href="{{asset('bundles/omarevtv/css/smoothness/jquery-ui-1.8.18.custom.css')}}" rel="stylesheet" type="text/css">
-//<link href="{{asset('bundles/omarevtv/css/bootstrap.css')}}" rel="stylesheet">
-//<link href="{{asset('bundles/omarevtv/css/bootstrap-responsive.css')}}" rel="stylesheet">
-//
-//<script src="{{asset('bundles/omarevtv/js/jquery-1.7.1.min.js')}}" type="text/javascript"></script>
-//<script src="{{asset('bundles/omarevtv/js/jquery-ui-1.8.18.custom.min.js')}}" type="text/javascript"></script>
-//<script src="{{asset('bundles/omarevtv/js/bootstrap.min.js')}}" type="text/javascript"></script>
-//<script src="{{asset('bundles/omarevtv/js/admin.js')}}" type="text/javascript"></script>
+var MediaType = require('./clip/MediaType'),
+InputType = require('./clip/InputType'),
+Paginator = require('./clip/Paginator'),
+ResourceList = require('./clip/ResourceList');
 
-$( '#catalog' ).tabs({ heightStyle: 'fill' });
+var paginator = new Paginator('#catalog-paginator', function(e) {
+    mediaList.setPage($(e.currentTarget).data('page'));
+    mediaList.reload();
+});
+
+var mediaList = new ResourceList('/files/',function(data) {
+    paginator.setCurrent(data.page);
+    paginator.setPages(data.pages);
+    paginator.render();
+
+    var deleteButtonSelector = '#playlist button.close';
+
+    $('ul#catalog li').remove();
+
+    $(data._embedded.items).each(function(index, item){
+        $('ul#catalog').append('<li data-id="' + item.id + '" data-duration="' + item.duration + '"'
+            + ' class="ui-state-default ui-draggable text-truncate list-group-item" style="display: list-item;"></span>'
+            + item.name
+            + '<button type="button" class="close d-none" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+            +'</li>');
+    });
+
+    $( "ul#catalog li" ).draggable({
+        appendTo: "body" ,
+        connectToSortable: "#playlist",
+        helper: "clone",
+        revert: "invalid",
+        stop: function(event, ui) {
+            $(deleteButtonSelector).click(removeButtonHandler);
+            $(ui.helper)
+                .css('transform', 'rotate(0)')
+                .css('webkit-transform', 'rotate(0)')
+                .css('backgroundColor', '#f8f8fe')
+                .find('button').toggleClass('d-none', false)
+            ;
+        },
+        start: function(event, ui) {
+            $(ui.helper)
+                .css('width', Math.ceil($(event.target).outerWidth()) + 'px')
+                .css('transform', 'rotate(-7deg)')
+                .css('webkit-transform', 'rotate(-7deg)')
+            ;
+        }
+    });
+
+    $(deleteButtonSelector).click(removeButtonHandler);
+
+    updatePlaylistDuration();
+    updatePlaylistItemsStartTime();
+});
+mediaList.setSort('name', 'asc')
+mediaList.reload();
+
+var mediaType = new MediaType('#media-type button', function(value) {
+    mediaList.setSort('name', 'asc')
+    mediaList.setCriteria('type','equal', value);
+    mediaList.reload();
+});
+
+var inputType = new InputType('#media-search', function(value) {
+    mediaList.setCriteria('search','contains', value);
+    mediaList.reload();
+});
 
 function removeButtonHandler(event)
 {
-    var el = $(event.target).parent().parent();
-    $(event.target).parent().trigger('remove').remove();
+    var el = $(event.currentTarget).parent();
+    el.trigger('remove').remove();
 
-    updateInput(el);
+    updateInput(el.parent());
     updatePlaylistDuration();
     updatePlaylistItemsStartTime();
 }
@@ -108,7 +162,6 @@ $("#playlist").sortable({
 
     },
     update: (event, ui)  => {
-
         updatePlaylistDuration();
         updatePlaylistItemsStartTime();
 
@@ -116,48 +169,4 @@ $("#playlist").sortable({
     }
 });
 
-$( "ul, li" ).disableSelection();
-
-$( "#catalog" ).resizable({
-    alsoResize: "#tabs-1"
-});
-
-$.getJSON('/files/', {limit:1000}, function(data) {
-
-    $(data._embedded.items).each(function(index, item){
-        $('#tabs-1 ul').append('<li data-id="' + item.id + '" data-duration="' + item.duration + '"'
-            + ' class="ui-state-default ui-draggable" style="display: list-item;">'
-            + '<span class="ui-icon ui-icon-document"></span>'
-            + item.name + '<a class="ui-icon ui-icon-minus"></a></li>');
-    });
-
-    $( "#catalog .list li" ).draggable({
-        appendTo: "body" ,
-        connectToSortable: "#playlist",
-        helper: "clone",
-        revert: "invalid",
-        stop: function(event, ui) {
-            $('#playlist .ui-icon-minus').click(removeButtonHandler);
-            //$(ui.helper).css('width', `auto`);
-
-            $(ui.helper).css('transform', 'rotate(0)');
-            $(ui.helper).css('webkit-transform', 'rotate(0)');
-        },
-        start: function(event, ui) {
-          //$(ui.helper).css('width', `${ $(event.target).width() }px`);
-
-          $(ui.helper).css('transform', 'rotate(-7deg)');
-          $(ui.helper).css('webkit-transform', 'rotate(-7deg)');
-          //$(ui.helper).css('display', 'inline-block');
-          $(ui.helper).css('border', '1px solid red');
-          //display: 'inline-block',
-       }
-    });
-
-    $('#playlist .ui-icon-minus').click(removeButtonHandler);
-
-    $('#playlist a.ui-draggable').remove();
-
-    updatePlaylistDuration();
-    updatePlaylistItemsStartTime();
-});
+//$( "#playlist li, #catalog li" ).disableSelection();

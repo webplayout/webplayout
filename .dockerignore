@@ -2,3 +2,5 @@
 /hls_live
 /docker
 /var
+/node_modules
+/.git

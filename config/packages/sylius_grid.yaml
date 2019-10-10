@@ -28,7 +28,7 @@ sylius_grid:
                     position: 100
 
             sorting:
-                name2: asc
+                name: asc
 
             fields:
                 name:

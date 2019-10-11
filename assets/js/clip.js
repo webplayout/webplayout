@@ -18,22 +18,38 @@ var paginator = new Paginator('#catalog-paginator', function(e) {
     mediaList.reload();
 });
 
+function dblClickHandler(e) {
+    $(e.currentTarget).clone().appendTo('#playlist')
+        .css('backgroundColor', '#f8f8fe')
+        .find('button').toggleClass('d-none', false).click(removeButtonHandler);
+
+    updateInput($('#playlist'));
+    updatePlaylistDuration();
+    updatePlaylistItemsStartTime();
+}
+
+function listItem(item) {
+    return '<li data-id="' + item.id + '" data-duration="' + item.duration + '"'
+        + ' class="ui-state-default ui-draggable text-truncate list-group-item" style="display: list-item;"></span>'
+        + item.name
+        + '<button type="button" class="close d-none" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+        +'</li>';
+}
+var deleteButtonSelector = '#playlist button.close';
 var mediaList = new ResourceList('/files/',function(data) {
     paginator.setCurrent(data.page);
     paginator.setPages(data.pages);
     paginator.render();
 
-    var deleteButtonSelector = '#playlist button.close';
+
 
     $('ul#catalog li').remove();
 
     $(data._embedded.items).each(function(index, item){
-        $('ul#catalog').append('<li data-id="' + item.id + '" data-duration="' + item.duration + '"'
-            + ' class="ui-state-default ui-draggable text-truncate list-group-item" style="display: list-item;"></span>'
-            + item.name
-            + '<button type="button" class="close d-none" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
-            +'</li>');
+        $('ul#catalog').append(listItem(item));
     });
+
+    $('ul#catalog li').dblclick(dblClickHandler);
 
     $( "ul#catalog li" ).draggable({
         appendTo: "body" ,

@@ -98,7 +98,7 @@ function removeButtonHandler(event)
     var el = $(event.currentTarget).parent();
     el.trigger('remove').remove();
 
-    updateInput(el.parent());
+    updateInput($('#playlist'));
     updatePlaylistDuration();
     updatePlaylistItemsStartTime();
 }

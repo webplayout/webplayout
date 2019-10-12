@@ -1,39 +1,59 @@
 ARG PHP_VERSION=7.3
-ARG NODE_VERSION=10
+ARG NODE_VERSION=8.10
 ARG NGINX_VERSION=1.16
 
-FROM php:${PHP_VERSION}-fpm-alpine
+
+FROM node:8.10-alpine as webplayout_nodejs
+
+WORKDIR /tmp
+
+COPY assets ./assets
+
+COPY package.json yarn.lock webpack.config.js .babelrc ./
+
+RUN mkdir -p public/build
+
+RUN set -eux; \
+        yarn install; \
+        yarn cache clean; \
+        yarn build
 
 
-COPY . /var/www
+
+
+FROM php:${PHP_VERSION}-fpm-alpine as webplayout_php
+
+RUN docker-php-ext-install pdo_mysql bcmath
+
+RUN apk add ffmpeg
 
 WORKDIR /var/www
 
-RUN mkdir -p var/cache var/log
-RUN chmod -R 777 var/cache var/log
+RUN echo "APP_ENV=prod" > .env
+COPY bin/ bin/
+COPY config/ config/
+COPY src/ src/
+COPY public/ public/
+COPY templates/ templates/
+COPY translations/ translations/
+COPY tv.sql ./
 
-#RUN rm -rf /var/www/html
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-# build for production
-#ARG APP_ENV=prod
+COPY composer.json composer.lock symfony.lock ./
+RUN set -eux; \
+    composer install --no-dev --prefer-dist --no-scripts --no-progress --no-suggest; \
+    composer dump-env prod; \
+    composer clear-cache; \
+    mkdir -p var/cache var/log; \
+    chmod -R 777 var/cache var/log
 
-# Add and Enable PHP-PDO Extenstions
-RUN docker-php-ext-install pdo_mysql bcmath
-
-#     php7-gd \
-#     php7-intl \
-#     php7-mcrypt \
-#     php7-opcache \
-#     php7-soap \
-#     php7-zip \
 
 # RUN bin/console doctrine:schema:drop --force
 # RUN bin/console doctrine:schema:update --force
 # RUN bin/console doctrine:fixtures:load
 
-RUN apk add ffmpeg
 
 RUN mkdir /var/www/media && chown www-data:www-data /var/www/media
 
@@ -44,3 +64,5 @@ VOLUME ["/var/www/media"]
 EXPOSE 9000
 
 CMD ["php-fpm", "-F"]
+
+COPY --from=webplayout_nodejs /tmp/public/build ./public/build

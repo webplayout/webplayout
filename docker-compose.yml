@@ -24,6 +24,9 @@ services:
       - mysql
     build: .
     image: webplayout/php_fpm
+    environment:
+      - APP_ENV=prod
+      - DATABASE_URL=mysql://tv:8GnWFxFU9M5k5nHTVujr@172.27.0.2:3306/tv
     ports:
       - "9000:9000"
     volumes:
@@ -40,6 +43,9 @@ services:
     depends_on:
       - mysql
     image: webplayout/php_fpm
+    environment:
+      - APP_ENV=prod
+      - DATABASE_URL=mysql://tv:8GnWFxFU9M5k5nHTVujr@172.27.0.2:3306/tv
     restart: always
     command: crond -l 2 -f
     volumes:

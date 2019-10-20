@@ -45,7 +45,6 @@ class MediaImportCommand extends ContainerAwareCommand
                 $entity = new File();
                 $entity->setName($file);
                 $entity->setFile($path);
-                $entity->setType('file');
                 $entity->setDuration($duration);
 
                 $em->persist($entity);

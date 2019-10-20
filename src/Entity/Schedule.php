@@ -38,7 +38,7 @@ class Schedule implements ResourceInterface
     private $end;
 
     /**
-     * @ORM\ManyToOne(targetEntity="File", inversedBy="schedules")
+     * @ORM\ManyToOne(targetEntity="File")
      * @ORM\JoinColumn(name="file_id", referencedColumnName="id")
      * @Assert\NotBlank
      */

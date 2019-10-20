@@ -15,6 +15,12 @@
                     <li data-id="{{ file.id }}" data-duration="{{ file.duration }}" class="ui-state-default text-truncate list-group-item">
                         {{ file.name }}
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <ul>
+                            {% for subfile in file.files %}
+                            {% set subfile = subfile.file %}
+                            <li data-duration="{{ subfile.duration }}">1 {{subfile.name }}</li>
+                            {% endfor %}
+                        </ul>
                     </li>
                 {% endfor %}
             </ul>
@@ -30,7 +36,7 @@
                     <div class="btn-group d-inline-flex float-right" role="group" id="media-type">
                         <button type="button" class="btn btn-secondary active" data-value="">All</button>
                         <button type="button" class="btn btn-secondary" data-value="clip">Clips</button>
-                        <button type="button" class="btn btn-secondary" data-value="file">Files</button>
+                        {#<button type="button" class="btn btn-secondary" data-value="file">Files</button>#}
                     </div>
                 </div>
             </div>

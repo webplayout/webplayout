@@ -11,6 +11,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FileRepository")
  * @ORM\Table(name="files")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({"file" = "App\Entity\File", "clip" = "App\Entity\Clip"})
  */
 class File implements ResourceInterface
 {
@@ -23,38 +26,39 @@ class File implements ResourceInterface
     private $name;
 
     /**
-     * @var string $type
-     *
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank
-     */
-    private $type;
-
-    /**
      * @var string $file
      *
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank
+     * @ORM\Column(type="string", nullable=true)
      */
     private $file;
 
     /**
+    * @ORM\OneToMany(targetEntity="ClipFile", mappedBy="clip",
+    *      cascade={"persist", "remove"}, orphanRemoval=true)
+    * @ORM\OrderBy({"ord" = "ASC"})
+    */
+    protected $files;
+
+    /**
      * @var integer $duration
      *
-     * @ORM\Column(type="integer")
-     * @Assert\NotBlank
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $duration;
 
     /**
-     * @var integer $id
+     * @var UUID $id
      *
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", options={"unsigned": true})
+     * @ORM\Column(name="id", type="guid")
+     * @ORM\GeneratedValue(strategy="UUID")
      */
     private $id;
 
+    function __construct()
+    {
+        $this->files = new ArrayCollection;
+    }
 
     /**
      * Set name
@@ -80,29 +84,6 @@ class File implements ResourceInterface
     }
 
     /**
-     * Set type
-     *
-     * @param string $type
-     * @return Files
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
      * Set file
      *
      * @param string $file
@@ -123,6 +104,33 @@ class File implements ResourceInterface
     public function getFile()
     {
         return $this->file;
+    }
+
+    /**
+     * Set files
+     *
+     * @param string $files
+     * @return Clip
+     */
+    public function setFiles($files)
+    {
+        foreach ($files as $file) {
+            $file->setClip($this);
+        }
+
+        $this->files = $files;
+
+        return $this;
+    }
+
+    /**
+     * Get files
+     *
+     * @return string
+     */
+    public function getFiles()
+    {
+        return $this->files;
     }
 
     /**

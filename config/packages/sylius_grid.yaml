@@ -6,6 +6,16 @@ sylius_grid:
                 options:
                     class: App\Entity\File
             filters:
+                exclude:
+                    type: string
+                    label: false
+                    options:
+                        fields:
+                            - id
+                    form_options:
+                        type: not_in
+                    enabled: true
+                    position: 1
                 search:
                     type: string
                     label: false
@@ -16,16 +26,20 @@ sylius_grid:
                         type: contains
                     enabled: true
                     position: 100
+                # type:
+                #     type: string
+                #     label: false
+                #     options:
+                #         fields:
+                #             - type
+                #     form_options:
+                #         type: equal
+                #     enabled: true
+                #     position: 100
                 type:
-                    type: string
-                    label: false
-                    options:
-                        fields:
-                            - type
-                    form_options:
-                        type: equal
-                    enabled: true
-                    position: 100
+                    type: file_type
+                    # form_options:
+                    #     range: [0, 100]
 
             sorting:
                 id: desc

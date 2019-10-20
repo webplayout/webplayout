@@ -109,32 +109,15 @@ class ClipPersistListener
 
         file_put_contents($this->media_dir . DIRECTORY_SEPARATOR . $filename, $xml->asXML());
 
-
         $duration = array_sum($event->getSubject()->getFiles()->map(function($v) {
                 return $v->getFile()->getDuration();
         })->toArray());
 
-        if (!$event->getSubject()->getFile()) {
-
-            $file = new File;
-            $file->setFile($filename);
-            $file->setName($event->getSubject()->getName());
-            $file->setDuration($duration);
-            $file->setType('clip');
-
-            $this->manager->persist($file);
-
-            $event->getSubject()->setFile($file);
-
-            $this->manager->persist($event->getSubject());
-
-        } else {
-            $this->manager->persist(
-                $event->getSubject()->getFile()
-                    ->setDuration($duration)
-                    ->setName($event->getSubject()->getName())
-            );
-        }
+        $this->manager->persist(
+            $event->getSubject()
+                ->setFile($filename)
+                ->setDuration($duration)
+        );
 
         $this->manager->flush();
     }

@@ -29,10 +29,16 @@ function dblClickHandler(e) {
 }
 
 function listItem(item) {
+    var subItems = '';
+    for (var index in item.files) {
+        subItems += '<li data-duration="' + item.files[index].file.duration + '">' + item.files[index].file.name + '</li>';
+    }
+
     return '<li data-id="' + item.id + '" data-duration="' + item.duration + '"'
         + ' class="ui-state-default ui-draggable text-truncate list-group-item" style="display: list-item;"></span>'
         + item.name
         + '<button type="button" class="close d-none" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+        + '<ul class="d-none">' + subItems + '</ul>'
         +'</li>';
 }
 var deleteButtonSelector = '#playlist button.close';
@@ -43,15 +49,15 @@ var mediaList = new ResourceList('/files/',function(data) {
 
 
 
-    $('ul#catalog li').remove();
+    $('ul#catalog > li').remove();
 
     $(data._embedded.items).each(function(index, item){
         $('ul#catalog').append(listItem(item));
     });
 
-    $('ul#catalog li').dblclick(dblClickHandler);
+    $('ul#catalog > li').dblclick(dblClickHandler);
 
-    $( "ul#catalog li" ).draggable({
+    $( "ul#catalog > li" ).draggable({
         appendTo: "body" ,
         connectToSortable: "#playlist",
         helper: "clone",
@@ -62,7 +68,8 @@ var mediaList = new ResourceList('/files/',function(data) {
                 .css('transform', 'rotate(0)')
                 .css('webkit-transform', 'rotate(0)')
                 .css('backgroundColor', '#f8f8fe')
-                .find('button').toggleClass('d-none', false)
+                .css('height', 'auto')
+                .find('button, ul').toggleClass('d-none', false)
             ;
         },
         start: function(event, ui) {
@@ -144,11 +151,11 @@ function updatePlaylistDuration()
     $('#playlistDuration').html(currentDuration);
 }
 
-function updatePlaylistItemsStartTime()
+function updatePlaylistItemsStartTime(children, currentDuration = 0)
 {
-    var currentDuration = 0;
+    if (!children) children = $('#playlist').children();
 
-    $.each($('#playlist').children(), function(index, row) {
+    $.each(children, function(index, row) {
 
         var startTime = formatDurationToReadableTime(currentDuration);
 
@@ -157,6 +164,8 @@ function updatePlaylistItemsStartTime()
         } else {
             $(row).prepend('<span class="start">' + startTime + '</span> ');
         }
+
+        updatePlaylistItemsStartTime($(row).find('ul').children(), currentDuration);
 
         currentDuration += $(row).data('duration');
     });

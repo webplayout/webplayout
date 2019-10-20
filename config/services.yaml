@@ -69,6 +69,14 @@ services:
     #         - { name: kernel.event_listener, event: app.clip.pre_create, method: prePersist }
     #         #- { name: kernel.event_listener, event: app.clip.pre_update, method: prePersist }
 
+    app.grid.filter.file_type:
+        class: App\Grid\Filter\SingleTableIngeritanceTypeFilter
+        tags:
+            -
+                name: sylius.grid_filter
+                type: file_type
+                form_type: App\Form\Type\Filter\FileFilterType
+
     App\Service\MediaDuration:
         arguments:
            - '%ffmpeg_path%'

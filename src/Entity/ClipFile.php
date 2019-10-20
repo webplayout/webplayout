@@ -25,7 +25,7 @@ class ClipFile implements ResourceInterface
     private $clip;
 
     /**
-     * @ORM\ManyToOne(targetEntity="File", inversedBy="clips")
+     * @ORM\ManyToOne(targetEntity="File", inversedBy="files")
      * @ORM\JoinColumn(name="file_id", referencedColumnName="id")
      */
     private $file;

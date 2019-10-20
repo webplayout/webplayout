@@ -3,10 +3,10 @@
 {% set file = '' %}
 {% set duration = '' %}
 
-{% if resource.file is not empty %}
+{#% if resource.file is not empty %}
     {% set file = resource.file.file %}
     {% set duration = resource.file.duration %}
-{% endif %}
+{% endif %#}
 
 {% block body %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -32,10 +32,10 @@
         <th>Name</th><td>{{ resource.name }}</td>
     </tr>
     <tr>
-        <th>File</th><td>{{ file }}</td>
+        <th>File</th><td>{{ resource.file }}</td>
     </tr>
     <tr>
-        <th>Duration</th><td>{{ duration }}</td>
+        <th>Duration</th><td>{{ resource.duration }}</td>
     </tr>
     <tr>
         <th>Playlist</th>

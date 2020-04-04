@@ -6,7 +6,6 @@ namespace App\EventListener;
 
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use App\Entity\File;
 
 class ClipPersistListener
 {
@@ -32,86 +31,53 @@ class ClipPersistListener
 
             $logo = $logoSetting ? $logoSetting->getValue() : '';
 
-            if ($logo) {
-                $producer = $xml->addChild('producer');
-                $producer->addAttribute('id', 'logo0');
-                $producer->addChild('property', $logo)->addAttribute('name', 'resource');
-            }
-
+            $producers = [];
             foreach ($files as $producerIndex => $resource) {
                 $resource = $resource->getFile();
+                $producerIndex = $resource->getId();
+                if (in_array($producerIndex, $producers)) continue;
+                $producers[] = $producerIndex;
                 $producer = $xml->addChild('producer');
                 $producer->addAttribute('id', 'producer'.$producerIndex);
                 $producer->addChild('property', ltrim($resource->getFile(),'/'))->addAttribute('name', 'resource');
             }
 
-            if ($logo) {
-                $playlistLogo = $xml->addChild('playlist');
-                $playlistLogo->addAttribute('id', 'playlistLogo');
-
-                $entry = $playlistLogo->addChild('entry');
-                $entry->addAttribute('producer', 'logo0');
-                $entry->addAttribute('repeat', '99999');
-            }
+            $duration = array_sum($event->getSubject()->getFiles()->map(function($v) {
+                return $v->getFile()->getDuration();
+            })->toArray());
 
             $playlist = $xml->addChild('playlist');
             $playlist->addAttribute('id', 'playlist-' . $id);
 
             foreach ($files as $producerIndex => $resource) {
                 $resource = $resource->getFile();
+                $producerIndex = $resource->getId();
                 $entry = $playlist->addChild('entry');
                 $entry->addAttribute('producer', 'producer' . $producerIndex);
                 $entry->addAttribute('in', '0');
-                $entry->addAttribute('out', '' . $resource->getDuration()*100);
+                $out = (round(($duration*25)/100, 0) - 1);
+                $entry->addAttribute('out', '' . $out);
             }
 
             if ($logo) {
-                $tracktor = $xml->addChild('tracktor');
-                $multitrack = $tracktor->addChild('multitrack');
-
-                $trackPlaylist = $multitrack->addChild('track');
-                $trackPlaylist->addAttribute('producer', 'playlist-' . $id);
-
-                $trackLogo = $multitrack->addChild('track');
-                $trackLogo->addAttribute('producer','playlistLogo');
-
-                $transition = $tracktor->addChild('transition');
-                $transition->addAttribute('in', '0.0');
-
-                $prop_mlt_service = $transition->addChild('property', 'composite');
-                $prop_mlt_service->addAttribute('name', 'mlt_service');
-
-                $prop_track_a = $transition->addChild('property','0');
-                $prop_track_a->addAttribute('name', 'a_track');
-
-                $prop_track_b = $transition->addChild('property', '1');
-                $prop_track_b->addAttribute('name', 'b_track');
-
-                $prop_progressive = $transition->addChild('property', '1');
-                $prop_progressive->addAttribute('name', 'progressive');
-
-                $prop_start = $transition->addChild('property', '0/50:100%x100%:100');
-                $prop_start->addAttribute('name', 'start');
-
-                $prop_stop = $transition->addChild('property', '0/50:100%x100%:100');
-                $prop_stop->addAttribute('name', 'end');
-
-                $prop_halign = $transition->addChild('property', 'right');
-                $prop_halign->addAttribute('name', 'halign');
-
-                $prop_valign = $transition->addChild('property', 'top');
-                $prop_valign->addAttribute('name', 'valign');
-
-                $prop_distort = $transition->addChild('property', '0');
-                $prop_distort->addAttribute('name', 'distort');
+                $filter = $xml->addChild('filter');
+                foreach([
+                    'mlt_service' => 'watermark',
+                    'resource' => $logo,
+                    'composite.progressive' => '1',
+                    'composite.valign' => 'top',
+                    'composite.halign' => 'right',
+                    'composite.sliced_composite' => '1',
+                    'composite.geometry' => '0/50:100%x100%:100',
+                    'composite.distort' => '0',
+                    ] as $prop_name => $prop_value) {
+                    $filter_prop = $filter->addChild('property', $prop_value);
+                    $filter_prop->addAttribute('name', $prop_name);
+                }
             }
         }
 
         file_put_contents($this->media_dir . DIRECTORY_SEPARATOR . $filename, $xml->asXML());
-
-        $duration = array_sum($event->getSubject()->getFiles()->map(function($v) {
-                return $v->getFile()->getDuration();
-        })->toArray());
 
         $this->manager->persist(
             $event->getSubject()

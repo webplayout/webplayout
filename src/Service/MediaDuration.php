@@ -36,7 +36,10 @@ class MediaDuration
         return '';
     }
 
-    private function durationToSeconds($duration):int
+    /**
+     * @return int Centiseconds
+     */
+    public function durationToSeconds($duration):int
     {
         $time = 0;
         $segments = explode(':', $duration);
@@ -45,13 +48,13 @@ class MediaDuration
             $segments = array_reverse($segments);
 
             array_walk($segments, function(&$value, $key) {
-                $value = ceil($value) * (60**$key);
+                $value = $value * (60**$key);
                 return true;
             });
 
-            $time = (int) array_sum($segments);
+            $time = array_sum($segments);
         }
 
-        return $time;
+        return (int) round($time * 100, 0);
     }
 }

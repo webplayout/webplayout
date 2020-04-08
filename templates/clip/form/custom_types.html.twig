@@ -12,13 +12,13 @@
             <ul id="playlist" class="list-group">
                 {% for file in form.parent.vars.data.files %}
                 {% set file = file.file %}
-                    <li data-id="{{ file.id }}" data-duration="{{ file.duration }}" class="ui-state-default text-truncate list-group-item">
+                    <li data-id="{{ file.id }}" data-duration="{{ (file.duration / 100) |round(0, 'ceil') }}" class="ui-state-default text-truncate list-group-item">
                         {{ file.name }}
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <ul>
                             {% for subfile in file.files %}
                             {% set subfile = subfile.file %}
-                            <li data-duration="{{ subfile.duration }}">1 {{subfile.name }}</li>
+                            <li data-duration="{{ (subfile.duration / 100) |round(0, 'ceil') }}">{{subfile.name }}</li>
                             {% endfor %}
                         </ul>
                     </li>

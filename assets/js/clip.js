@@ -31,10 +31,10 @@ function dblClickHandler(e) {
 function listItem(item) {
     var subItems = '';
     for (var index in item.files) {
-        subItems += '<li data-duration="' + item.files[index].file.duration + '">' + item.files[index].file.name + '</li>';
+        subItems += '<li data-duration="' + Math.ceil(item.files[index].file.duration / 100) + '">' + item.files[index].file.name + '</li>';
     }
 
-    return '<li data-id="' + item.id + '" data-duration="' + item.duration + '"'
+    return '<li data-id="' + item.id + '" data-duration="' + Math.ceil(item.duration / 100) + '"'
         + ' class="ui-state-default ui-draggable text-truncate list-group-item" style="display: list-item;"></span>'
         + item.name
         + '<button type="button" class="close d-none" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'

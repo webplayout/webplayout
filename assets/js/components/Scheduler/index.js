@@ -72,6 +72,7 @@ export default class SchedulerApp extends React.Component {
               const clips = res.data._embedded.items;
               const items = [];
               clips.map((clip,i) => {
+                  clip.duration = Math.ceil((clip.duration / 100));
                   items.push(
                       <Clip key={clip.id} item={clip}
                       onDragStart={() =>

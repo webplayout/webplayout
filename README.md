@@ -18,4 +18,4 @@ Webplayout uses a number of open source projects:
 * Symfony - PHP framework
 * Sylius - Open Source eCommerce Platform on Symfony
 
-And of course Webplayout itself is open source.
+And of course Webplayout itself is open source. Visit the [repository](https://github.com/webplayout/webplayout).

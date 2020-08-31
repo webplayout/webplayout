@@ -1,9 +1,9 @@
-ARG PHP_VERSION=7.3
-ARG NODE_VERSION=8.10
-ARG NGINX_VERSION=1.16
+ARG PHP_VERSION=7.4.9
+ARG NODE_VERSION=12.18.3
+ARG NGINX_VERSION=1.19.2
 
 
-FROM node:8.10-alpine as webplayout_nodejs
+FROM node:${NODE_VERSION}-alpine as webplayout_nodejs
 
 WORKDIR /tmp
 

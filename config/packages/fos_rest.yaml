@@ -19,5 +19,5 @@ fos_rest:
        rules:
            - { path: ^/files, prefer_extension: true, fallback_format: json, priorities: [ json, html ] }
            #- { path: ^/clips, prefer_extension: true, fallback_format: json, priorities: [ json, html ] }
-           - { path: ^/schedules, prefer_extension: true, fallback_format: json, priorities: [ json, html ] }
+           - { path: ^/schedules, prefer_extension: true, fallback_format: json, priorities: [ json ] }
            - { path: '^/', priorities: [ 'html', '*/*'], fallback_format: ~, prefer_extension: true }

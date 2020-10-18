@@ -6,6 +6,7 @@ app_clip:
 app_schedule:
     resource: |
         alias: app.schedule
+        grid: app_schedule
     type: sylius.resource_api
 
 app_file:

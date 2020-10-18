@@ -58,3 +58,22 @@ sylius_grid:
                     enabled: true
 
             limits: [30, 12, 48]
+
+        app_schedule:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: App\Entity\Schedule
+            filters:
+                start:
+                    type: date
+                    options:
+                        field: start
+                        inclusive_to: true
+                end:
+                    type: date
+                    options:
+                        field: end
+                        inclusive_to: true
+
+            limits: [100]

@@ -9,7 +9,6 @@ sylius_resource:
         app.schedule:
             classes:
                 model: App\Entity\Schedule
-            templates: 'schedule'
 
         app.file:
             classes:

@@ -21,14 +21,9 @@ export default class SchedulerApp extends React.Component {
 
     calendarComponentRef = React.createRef()
 
-    state = {
-        events: []
-    }
-
     constructor(props) {
         super(props)
         this.state = {
-            events: [],
             draggedEvent: null,
             counters: {},
             elements: null,
@@ -51,18 +46,6 @@ export default class SchedulerApp extends React.Component {
         });
 
         this.loadMore();
-
-        axios.get(`/schedules/?limit=10000`)
-            .then(res => {
-                const items = res.data._embedded.items;
-                const events = items.map((item) => {
-                    item.start = new Date(item.start)
-                    item.end = new Date(item.end)
-                    return item;
-                });
-
-                this.setState({ events: events });
-            })
     }
 
     loadMore = () => {
@@ -126,9 +109,6 @@ export default class SchedulerApp extends React.Component {
             if (confirm('Are you sure you want to delete this event ' + eventId)) {
                 axios.delete(`/schedules/` + eventId)
                     .then(res => {
-                        console.log(this.calendarComponentRef.current.calendar.getEventById(eventId))
-
-                    }).finally(() => {
                         currentEvent.remove()
                     })
             }
@@ -137,31 +117,53 @@ export default class SchedulerApp extends React.Component {
 
     eventReceive = ({draggedEl, event, view}) => {
 
-    let postData = {
-        title: event.title,
-        //allDay: event.isAllDay,
-        start: event.start,
-        end: event.end,
-        file: event.extendedProps.file
+        let postData = {
+            title: event.title,
+            start: event.start,
+            end: event.end,
+            file: event.extendedProps.file
+        }
+
+        axios.post('/schedules/', postData)
+            .then(response => {
+
+                const updatedEvent = {
+                    id: response.data.id,
+                    title: event.title,
+                    start: event.start,
+                    end: event.end,
+                    file: response.data.file.id
+                };
+
+                this.calendarComponentRef.current.calendar.addEvent(updatedEvent);
+
+            }).finally(() => {
+                event.remove();
+            })
     }
 
-    axios.post('/schedules/', postData)
-        .then(response => {
+    getEvents(info, successCallback, failureCallback) {
 
-            const updatedEvent = {
-                id: response.data.id,
-                title: event.title,
-                start: event.start,
-                end: event.end,
-                file: response.data.file.id
-            };
+        const params = {
+            'criteria[start][to][date]': info.endStr,
+            'criteria[end][from][date]': info.startStr,
+            'limit': 100
+        };
 
-            event.remove();
+        axios.get('/schedules/', {params: params})
+            .then(res => {
+                const items = res.data._embedded.items;
+                const events = items.map((item) => {
+                    item.start = new Date(item.start)
+                    item.end = new Date(item.end)
+                    return item;
+                });
 
-            this.setState({events: [...this.state.events, updatedEvent]})
-        }).finally(() => {
-
-        })
+                successCallback(events);
+            })
+            .catch(function (err) {
+                failureCallback(err);
+            });
     }
 
     render() {
@@ -196,7 +198,7 @@ export default class SchedulerApp extends React.Component {
                 plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin, 'bootstrap' ]}
                 themeSystem="bootstrap"
                 ref={ this.calendarComponentRef }
-                events={ this.state.events }
+                events={ this.getEvents }
                 nowIndicator={true}
                 allDaySlot={false}
                 editable={true}

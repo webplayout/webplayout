@@ -11,7 +11,7 @@
     "@fullcalendar/interaction": "^4.3.0",
     "@fullcalendar/react": "^4.3.0",
     "@fullcalendar/timegrid": "^4.3.0",
-    "@symfony/webpack-encore": "^0.30.2",
+    "@symfony/webpack-encore": "^0.31.0",
     "axios": "^0.20.0",
     "bootstrap": "^4.3.1",
     "core-js": "^3.0.0",

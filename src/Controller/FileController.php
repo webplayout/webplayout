@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 #use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -35,7 +36,7 @@ class FileController extends AbstractController
     /**
      * @Route("/files/upload", methods={"POST"}, name="file_upload")
      */
-    function uploadAction(Request $request, MediaDuration $mediaDuration)
+    function uploadAction(Request $request, EntityManagerInterface $em, MediaDuration $mediaDuration)
     {
         $media_dir = $this->getParameter('media_dir');
 
@@ -93,7 +94,6 @@ class FileController extends AbstractController
             $entity->setFile($originalFilename);
             $entity->setDuration($duration);
 
-            $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
         }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,9 +24,8 @@ class SettingController extends AbstractController
     /**
      * @Route("/settings", methods={"GET"}, name="settings_index")
      */
-    public function index(): Response
+    public function index(EntityManagerInterface $em): Response
     {
-        $em = $this->getDoctrine()->getEntityManager();
         $logo = $em->getRepository('App\Entity\Setting')
             ->findOneBy(['name' => 'logo']);
 
@@ -39,15 +39,13 @@ class SettingController extends AbstractController
     /**
      * @Route("/settings", methods={"POST"}, name="settings_save")
      */
-    public function saveAction(Request $request): Response
+    public function saveAction(EntityManagerInterface $em, Request $request): Response
     {
         $form = $this->getForm();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-           $em = $this->getDoctrine()->getEntityManager();
 
            if ($logo = $em->getRepository('App\Entity\Setting')
                ->findOneBy(['name' => 'logo'])
